@@ -1,5 +1,4 @@
 % Initialize Structural Model 
-%
 % This code creates the objects for running an analysis with a structure
 
 % ------------------------------------------------------------------------
@@ -126,6 +125,7 @@ BridgeResponse.V_Track = zeros(2,bsteps);
 load BridgeIC % Load Initial Conditions of Bridge
 ApplyBridgeIC % Inserts the initial condition at t = 0 for each response par.
 
+
 function [K] = InitialKt(E,I,L,ktheta)
     k11 = 12*E*I/L^3;  k12 = 6*E*I/L^2;       k13 = 6*E*I/L^2;
     k21 = k12;         k22 = 4*E*I/L+ktheta;  k23 = 2*E*I/L;
@@ -134,13 +134,15 @@ function [K] = InitialKt(E,I,L,ktheta)
     K = [k11 k12 k13; k21 k22 k23; k31 k32 k33];
 end
 
+
 function [K_full] = create_stiffness_all(ks, kh, kv, kr, l, h)
 % This functions extends the structural stiffness matrix to convert it into
 % the full stiffness matrix with the interface rail
 
 K_full = [ks(1,1), ks(1,2), ks(1,3), -kh, 0, 0, -kh, 0, 0;
           ks(2,1), ks(2,2), ks(2,3), 0, kv * (l - h/2), -kr, 0, kv * (l + h/2), -kr;
-          ks(3,1), ks(3,2), ks(3,3), 0, ]
+          ks(3,1), ks(3,2), ks(3,3), 0, ];
+
 end
 
 
