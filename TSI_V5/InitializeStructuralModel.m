@@ -130,33 +130,33 @@ ApplyBridgeIC % Inserts the initial condition at t = 0 for each response par.
 
 
 function [K] = Create_Stiffness(BridgeProps, InterfaceProps)
-    % This function creates the stiffness matrix of the structure and the
-    % ...
-    
-    % Bridge Properties (elastic)
-    E = BridgeProps.E;
-    I = BridgeProps.I;
-    L = BridgeProps.L;
-    ktheta = BridgeProps.ktheta;
-    
-    % Interface Properties
-    kh = InterfaceProps.kh;
-    kv = InterfaceProps.kv;
-    kt = InterfaceProps.kt;
-    d1 = InterfaceProps.d1;
-    l1 = InterfaceProps.l1;
-    l2 = InterfaceProps.l2;
-    
-    % Create Stiffness Matrix
-    K = [ 12*E*I/L^3 + 2*kh   , -6*E*I/L^2        , -6*E*I/L^2 + 2*kh*d1 , -kh    , 0     ,  0  , -kh    ,  0     ,  0  ;
-         -6*E*I/L^2           ,  4*E*I/L + ktheta ,  2*E*I/L             ,  0     , 0     ,  0  ,  0     ,  0     ,  0  ;
-         -6*E*I/L^2 + 2*kh*d1 ,  2*E*I/L          ,  Kt                  , -kh*d1 , kv*l1 , -kt , -kh*d1 , -kv*l2 , -kt ; 
-         -kh                  ,  0                , -kh*d1               ,  kh    , 0     ,  0  ,  0     ,  0     ,  0  ;
-          0                   ,  0                , -kv*l1               ,  0     , kv    ,  0  ,  0     ,  0     ,  0  ;
-          0                   ,  0                , -kt                  ,  0     , 0     ,  kt ,  0     ,  0     ,  0  ;
-         -kh                  ,  0                , -kh*d1               ,  0     , 0     ,  0  ,  kh    ,  0     ,  0  ;
-          0                   ,  0                , -kv*l2               ,  0     , 0     ,  0  ,  0     ,  kv    ,  0  ;
-          0                   ,  0                , -kt                  ,  0     , 0     ,  0  ,  0     ,  0     ,  kt ];
+% This function creates the stiffness matrix of the structure and the
+% ...
+
+% Bridge Properties (elastic)
+E = BridgeProps.E;
+I = BridgeProps.I;
+L = BridgeProps.L;
+ktheta = BridgeProps.ktheta;
+
+% Interface Properties
+kh = InterfaceProps.kh;
+kv = InterfaceProps.kv;
+kt = InterfaceProps.kt;
+d1 = InterfaceProps.d1;
+l1 = InterfaceProps.l1;
+l2 = InterfaceProps.l2;
+
+% Create Stiffness Matrix
+K = [ 12*E*I/L^3 + 2*kh   , -6*E*I/L^2        , -6*E*I/L^2 + 2*kh*d1 , -kh    , 0     ,  0  , -kh    ,  0     ,  0  ;
+     -6*E*I/L^2           ,  4*E*I/L + ktheta ,  2*E*I/L             ,  0     , 0     ,  0  ,  0     ,  0     ,  0  ;
+     -6*E*I/L^2 + 2*kh*d1 ,  2*E*I/L          ,  Kt                  , -kh*d1 , kv*l1 , -kt , -kh*d1 , -kv*l2 , -kt ; 
+     -kh                  ,  0                , -kh*d1               ,  kh    , 0     ,  0  ,  0     ,  0     ,  0  ;
+      0                   ,  0                , -kv*l1               ,  0     , kv    ,  0  ,  0     ,  0     ,  0  ;
+      0                   ,  0                , -kt                  ,  0     , 0     ,  kt ,  0     ,  0     ,  0  ;
+     -kh                  ,  0                , -kh*d1               ,  0     , 0     ,  0  ,  kh    ,  0     ,  0  ;
+      0                   ,  0                , -kv*l2               ,  0     , 0     ,  0  ,  0     ,  kv    ,  0  ;
+      0                   ,  0                , -kt                  ,  0     , 0     ,  0  ,  0     ,  0     ,  kt ];
 end
 
 
