@@ -44,9 +44,12 @@ PlasticHingePar.xmaxp = 0;
 % Interface Model Parameters
 % ------------------------------------------------------------------------
 
-kh = 10;    % Lateral Stiffness
-kv = 10;    % Vertical Stiffness
-kr = 100;   % Rotational Stiffness
+InterfaceProps.kh = 10;
+InterfaceProps.kv = 10;
+InterfaceProps.kt = 10;
+InterfaceProps.d1 = 10;
+InterfaceProps.l1 = 10;
+InterfaceProps.l2 = 10;
 
 % ------------------------------------------------------------------------
 % Convergence Parameters
@@ -127,15 +130,14 @@ ApplyBridgeIC % Inserts the initial condition at t = 0 for each response par.
 
 
 function [K] = Create_Stiffness(BridgeProps, InterfaceProps)
-% Create the stiffness matrix of the structure
-
+% This function creates the stiffness matrix of the structure and the
+% ...
 
 % Bridge Properties (elastic)
 E = BridgeProps.E;
 I = BridgeProps.I;
 L = BridgeProps.L;
 ktheta = BridgeProps.ktheta;
-
 
 % Interface Properties
 kh = InterfaceProps.kh;
@@ -144,7 +146,6 @@ kt = InterfaceProps.kt;
 d1 = InterfaceProps.d1;
 l1 = InterfaceProps.l1;
 l2 = InterfaceProps.l2;
-
 
 % Create Stiffness Matrix
 K = [ 12*E*I/L^3 + 2*kh   , -6*E*I/L^2        , -6*E*I/L^2 + 2*kh*d1 , -kh    , 0     ,  0  , -kh    ,  0     ,  0  ;
@@ -156,7 +157,6 @@ K = [ 12*E*I/L^3 + 2*kh   , -6*E*I/L^2        , -6*E*I/L^2 + 2*kh*d1 , -kh    , 
      -kh                  ,  0                , -kh*d1               ,  0     , 0     ,  0  ,  kh    ,  0     ,  0  ;
       0                   ,  0                , -kv*l2               ,  0     , 0     ,  0  ,  0     ,  kv    ,  0  ;
       0                   ,  0                , -kt                  ,  0     , 0     ,  0  ,  0     ,  0     ,  kt ];
-
 end
 
 

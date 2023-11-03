@@ -1,7 +1,7 @@
 %% Solution of the equation of motion
 % This code solves the equation of motion of the system, using an explicit
 % scheme for the integration
-clear, clc, close
+clear, clc, close all
 nfig = 0;
 showplot = 0;
 
@@ -9,10 +9,12 @@ showplot = 0;
 load WheelGeom
 load RailGeom
 load RailProps
+RailProps.E1 = RailProps.E1/10;
+RailProps.E1 = RailProps.E1/10;
 
 %% Solution Parameters
-dtt  = 5.0E-4;   % time step (sec) of train
-dtb  = 5.0E-4;   % time step (sec) of bridge 
+dtt  = 1.0E-3;   % time step (sec) of train
+dtb  = 1.0E-3;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
@@ -25,8 +27,8 @@ CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 %% Forcing parameters
 SF = 1.0;
 
-load GMs\UsedRecords\RSN181_IMPVALLH1
-urec = SF*TimeAccelData(:,2)/100;            % Displacement Time-History
+load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN170_IMPVALLH1.mat
+urec = SF*TimeAccelData(:,2)/100;            % Displacement Time-History (m)
 
 dtrec = round(0.005,3);                      % Time step of record
 trec  = 0:dtrec:dtrec*(length(urec)-1);      % Time vector 
@@ -119,8 +121,7 @@ for it = 2:tsteps
     V2 = V1+(1+phi)*A1*dtt-phi*A0*dtt;
     
     % Update the force vector with Contact Algorithm
-    [F,NF_L,NF_R,vec,Ft,delta(:,it-1),Momt] = ... 
-        ContactForce(X2(7:9)', ...
+    [F,NF_L,NF_R,vec,Ft,delta(:,it-1),Momt] = ContactForce(X2(7:9)', ...
                      V2(7:9)', ...
                      [BridgeResponse.X_Track(1,ib-1), BridgeResponse.X_Track(2,ib-1),0], ...
                      [BridgeResponse.V_Track(1,ib-1), BridgeResponse.V_Track(2,ib-1),0], ...
@@ -168,7 +169,7 @@ toc
 
 %%  Post Processing
 
-% PostProcessingGM
+PostProcessingGM
 
 % hold off
 % figure(3)
