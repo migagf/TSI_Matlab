@@ -25,16 +25,19 @@ Vel = 0.01/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 20.0;
+SF = 1.0;
 
-load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN180_IMPVALLH1.mat
-urec = SF*TimeAccelData(:,2)/100;            % Displacement Time-History (m)
+load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
+ugddot = SF*TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
-dtrec = round(0.02,3);                      % Time step of record
-trec  = 0:dtrec:dtrec*(length(urec)-1);      % Time vector 
+dtrec = round(0.005,3);                      % Time step of record
+trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector 
 
-ugdot  = [0 diff(urec')]/(dtrec);            % Velocity Time-History
-ugddot = [0 diff(ugdot)]/(dtrec);            % Acceleration Time-History
+%ugdot  = [0 diff(urec')]/(dtrec);           % Velocity Time-History
+%ugddot = [0 diff(ugdot)]/(dtrec);           % Acceleration Time-History
+
+ugdot = cumtrapz(ugddot) * dtrec;
+urec = cumtrapz(ugdot) * dtrec;
 
 % Plot EQ record
 nfig = nfig + 1;
@@ -50,6 +53,8 @@ tb = 0:dtb:trec(end);  % Time vector for bridge analysis
 ugddot  = interp1(trec,ugddot,tb);  % Excitation is required only for bridge
 ugdot   = interp1(trec,ugdot,tb);   % Excitation is required only for bridge
 urec    = interp1(trec,urec,tb);    % Excitation is required only for bridge
+
+ug = urec;
 
 tsteps = length(tt);
 bsteps = length(tb);
