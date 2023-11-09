@@ -17,15 +17,21 @@ nfig = nfig+1;
 figure(nfig)
 
 subplot(4,1,1)
-plot(tt,-X(8,:)+X(8,1),tt,-X(5,:)+X(5,1),tt,-X(2,:)+X(2,1),tb,-BridgeResponse.X_Track(2,:)), ylabel('Vertical trans. (m)'), xlabel('Time (s)');
+plot(tt,-X(8,:)+X(8,1),tt,-X(5,:)+X(5,1),tt,-X(2,:)+X(2,1),tb,-BridgeResponse.X_Track(2,:))
+ylabel('Vertical trans. (m)'), xlabel('Time (s)')
 axis([tmin tmax -0.05 0.05]), grid on
 legend('Wheelset','Bogie','Car','location','eastoutside')
-subplot(4,1,2), plot(tt,X(7,:),tt,X(4,:),tt,X(1,:),tb,BridgeResponse.X_Track(1,:)), ylabel('Horiz. trans. (m)'), xlabel('Time (s)');
+
+subplot(4,1,2), plot(tt,X(7,:),tt,X(4,:),tt,X(1,:),tb,BridgeResponse.X_Track(1,:))
+ylabel('Horiz. trans. (m)'), xlabel('Time (s)')
 axis([tmin tmax -0.20 0.20]), grid on
 legend('Wheelset','Bogie','Car','location','eastoutside')
-subplot(4,1,3), plot(tt,X(9,:),tt,X(6,:),tt,X(3,:)), ylabel('Rotation (-)'), xlabel('Time (s)');
+
+subplot(4,1,3), plot(tt,X(9,:),tt,X(6,:),tt,X(3,:))
+ylabel('Rotation (-)'), xlabel('Time (s)')
 axis([tmin tmax -0.05 0.05]), grid on
 legend('Wheelset','Bogie','Car','location','eastoutside')
+
 subplot(4,1,4)
 plot(tt,Left_Cont)
 hold on
@@ -33,6 +39,7 @@ plot(tt,Right_Cont), axis([tmin tmax 0 500])
 grid on
 xlabel('Time (sec)'), ylabel('Contact Force (kN)')
 legend('L. Wheel','R. Wheel','location','eastoutside')
+
 % %% Plot accelerations
 % nfig = nfig+1; 
 % figure(nfig)

@@ -1,7 +1,7 @@
 function [TState,CState,PlasticHingePar] = setTrialStateBWBNwD(TState,CState,PlasticHingePar,BridgePar)
 % Bouc-Wen Baber with Degradation and Pinching
 
-m = BridgePar.m;
+m = 1.0;
 
 Fy = PlasticHingePar.Fy;
 xu = PlasticHingePar.xu;

@@ -43,6 +43,8 @@ if delta == 0
     RyWheel = RailProps.R2y;
     RyRail  = RailProps.R1y;
 end
+
 RyWheel = RyWheel;
 RyRail  = RyRail ;
+
 end
