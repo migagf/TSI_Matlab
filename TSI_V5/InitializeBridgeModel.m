@@ -126,12 +126,12 @@ BridgeResponse.V_Track = zeros(2,bsteps);
 % l3: distance from the center of pier to the base of the rail
 
 kh = 1.0e6;        % N/m
-kv = 1.0e7;        % N/m
-ktheta = 1.0e7;    % N-m/rad
+kv = 6.0e6;        % N/m
+ktheta = 1.0e6;    % N-m/rad
 
-ch = 1.0e7;        % N/m
-cv = 1.0e7;        % N/m
-ctheta = 1.0e7;    % N-m/rad
+ch = 1.0e6;        % N/m
+cv = 1.0e6;        % N/m
+ctheta = 1.0e6;    % N-m/rad
 
 krail1 = k_rail(kh, kv, ktheta, 0.5,  0.2);
 krail2 = k_rail(kh, kv, ktheta, 0.5,  0.8);
@@ -145,8 +145,8 @@ cfull = fullstiffness(c_bridge, crail1, crail2);
 
 mfull = diag([ ...
     BridgePar.mass, BridgePar.itheta/10, BridgePar.itheta, ...
-    BridgePar.mass/100, BridgePar.mass/100, BridgePar.itheta/100, ...
-    BridgePar.mass/100, BridgePar.mass/100, BridgePar.itheta/100]);
+    BridgePar.mass/1000, BridgePar.mass/1000, BridgePar.itheta/1000, ...
+    BridgePar.mass/1000, BridgePar.mass/1000, BridgePar.itheta/1000]);
 
 % Here, pay attention to the mass and inertia of the track assemblies
 %[phi, tn, xin] = eigenvalue(mfull, kfull, cfull);

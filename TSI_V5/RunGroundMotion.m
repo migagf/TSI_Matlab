@@ -9,28 +9,30 @@ showplot = 0;
 load WheelGeom
 load RailGeom
 load RailProps
-RailProps.E1 = RailProps.E1/10;
-RailProps.E1 = RailProps.E1/10;
+RailProps.E1 = RailProps.E1/5;
+RailProps.E1 = RailProps.E1/5;
 
 %% Solution Parameters
-dtt  = 1.0E-3;   % time step (sec) of train
-dtb  = 1.0E-3;   % time step (sec) of bridge 
+dtt = 1.0E-3;   % time step (sec) of train
+dtb = 1.0E-3;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
 phi = 0.5;
 
 g   = 9.81;       % m/s2
-Vel = 0.01/3.6;   % m/sec
+Vel = 100/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 1.0;
+SF = 10.0;
 
-load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
-ugddot = SF*TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
+%load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
+load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")
+ugddot = SF * TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
-dtrec = round(0.005,3);                      % Time step of record
+dtrec = round(0.005,3);                      % Time step of record.
+ugddot = [0*(0:dtrec:1)'; ugddot];
 trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector 
 
 %ugdot  = [0 diff(urec')]/(dtrec);           % Velocity Time-History
@@ -39,10 +41,11 @@ trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector
 ugdot = cumtrapz(ugddot) * dtrec;
 urec = cumtrapz(ugdot) * dtrec;
 
-% Plot EQ record
-nfig = nfig + 1;
-figure(nfig)
-subplot(3,1,1), plot(trec,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)')
+% Plot EQ record 
+nfig = nfig + 1; 
+
+figure(nfig) 
+subplot(3,1,1), plot(trec,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
 subplot(3,1,2), plot(trec,ugdot), xlabel('Time (sec)'), ylabel('Vel. (m/s)'), title('Ground Motion (LPE)')
 subplot(3,1,3), plot(trec,urec), xlabel('Time (sec)'), ylabel('Dis. (m)'), title('Ground Motion (LPE)')
 
@@ -71,11 +74,12 @@ X = zeros(9,tsteps); % Train Global Coordinates
 V = zeros(9,tsteps); % Train Velocities
 A = zeros(9,tsteps); % Train Accelerations
 
-load X_initial
+%load X_initial
 
-X0 = X_initial;             % Initial Global Coordinates
-%X0(3) = 0; X0(6) = 0; X0(9) = 0.0;
-%X0 = 2.57 * [0 -1 0 0 -1 0 0 -1 0]';
+%X0 = X_initial;      % Initial Global Coordinates
+% X0(1) = 0; X0(4) = 0; X0(7) = 0.0;
+
+X0 = 0.57 * [0 -1 0 0 -1 0 0 -1 0]';
 
 V0 = [0 0 0 0 0 0 0 0 0]';  % Initial Velocities
 A0 = [0 0 0 0 0 0 0 0 0]';  % Initial Accelerations
@@ -151,7 +155,7 @@ for it = 2:tsteps
         );
     
     % Updated force vector
-    Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), - F(2, 1), 0, -F(1, 2), - F(2, 2), 0]';
+    Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), 0, -F(1, 2), -F(2, 2), 0]';
     
     Cforce = 10 ^ 6 * [0, 0, 0, 0, 0, 0, F(1, 1) + F(1, 2), F(2, 1) + F(2, 2), F(3, 1) + F(3, 2)]';
     
