@@ -12,7 +12,7 @@ end
 
 for i = 1:10:imax
     x_track(i) = BridgeResponse.X_Track(1,i);
-    z_track(i) = BridgeResponse.X_Track(2,i);
+    z_track(i) = BridgeResponse.X_Track(2,i)+0.02;
     phi_track(i) = -BridgeResponse.X(3,i);
 
     X_ref = X(:,i);

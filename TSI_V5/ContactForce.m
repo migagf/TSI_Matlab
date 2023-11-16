@@ -8,7 +8,7 @@ function [F,NF_L,NF_R,vec,Ft,delta,Momt,Uplift] = ContactForce(...
     Rail_geom_fine, LWheel_geom_fine, RWheel_geom_fine)
 % CONTACTFORCE calculates the magnitude and components of the wheel/rail
 % contact forces, using the Hertz theory and the geometry of the contact.
-cr = 0.7;
+cr = 1.0;
 
 % Input Parameters:
 %   - Y_w (m): Lateral coordinate of the wheelset (in track coordinates)
@@ -27,7 +27,7 @@ R_wg = [Y_w Z_w];    % R vector, in global coordinate system
 
 % Track coordinates
 Y_tr = Utr(1);       % m
-Z_tr = Utr(2) - 2;       % m
+Z_tr = Utr(2);       % m
 phi_tr = Utr(3);     % rad  
 R_track = [Y_tr Z_tr];
 
@@ -36,16 +36,16 @@ R_w = R_wg - R_track;  % Wheelset location in track coordinate system
 
 
 % Left rail (All these values are provided in track coordinate system)
-phi_Lr = phi_tr + Us(3);                       % Rotation of the left rail
-Z_Lr  = - 3.124 * 25.4 /1000 + Us(2); %-Z_tr;    % Vertical position of the left rail (m)   
-Y_Lr  = -34.3355 * 25.4/1000 + Us(1); %-Y_tr;  % Horizontal position of the left rail (m)
+phi_Lr = -phi_tr - Us(3);                       % Rotation of the left rail
+Z_Lr  = - 3.124 * 25.4 /1000 + Us(2) - Z_tr; %-Z_tr;    % Vertical position of the left rail (m)   
+Y_Lr  = -34.3355 * 25.4/1000 + Us(1) - Y_tr; %-Y_tr;  % Horizontal position of the left rail (m)
 
 R_Lr = [Y_Lr Z_Lr];                 % R vector, in global coordinate system
 
 % Right rail (All these values are provided in track coordinate system)
-phi_Rr = phi_tr + Us(6);                    % Rotation of the left rail
-Z_Rr  = -3.124*25.4/1000 + Us(5); %-Z_tr;    % Vertical position of the left rail (m)   
-Y_Rr  = 34.3355*25.4/1000 + Us(4); %-Y_tr;  % Horizontal position of the left rail (m)  
+phi_Rr = -phi_tr - Us(6);                    % Rotation of the left rail
+Z_Rr  = -3.124*25.4/1000 + Us(5) - Z_tr; %-Z_tr;    % Vertical position of the left rail (m)   
+Y_Rr  = 34.3355*25.4/1000 + Us(4) - Y_tr; %-Y_tr;  % Horizontal position of the left rail (m)  
 
 R_Rr = [Y_Rr Z_Rr];                 % R vector, in track coordinate system
 
