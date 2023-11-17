@@ -7,7 +7,7 @@ Mw = 4*648;         % Wheelset mass (kg)
 
 Icx = 3.2e4;        % Mass moment of inertia of car body about X axis (kg-m2)
 Itx = 2*944*2;       % Mass moment of inertia of bogie about X axis (kg-m2)
-Iwx = 4*362.41*2;       % Mass moment of inertia of wheelset about X axis (kg-m2)
+Iwx = 4*362.41*2*5;       % Mass moment of inertia of wheelset about X axis (kg-m2)
 
 %% Mass Matrix
 

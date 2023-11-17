@@ -5,30 +5,34 @@ clear, clc, close all
 nfig = 0;
 showplot = 0;
 
+% Factor for LE Bridge or NL Bridge
+LE = 1.0;
 %% Load Data
 load WheelGeom
 load RailGeom
 load RailProps
-RailProps.E1 = RailProps.E1/5;
-RailProps.E1 = RailProps.E1/5;
+RailProps.E1 = RailProps.E1;
+RailProps.E1 = RailProps.E1;
+
 
 %% Solution Parameters
-dtt = 1.0E-3;   % time step (sec) of train
-dtb = 1.0E-3;   % time step (sec) of bridge 
+dtt = 5.0E-4;   % time step (sec) of train
+dtb = 5.0E-4;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
 phi = 0.5;
 
 g   = 9.81;       % m/s2
-Vel = 100/3.6;   % m/sec
+Vel = 0.01/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
+
 %% Forcing parameters
-SF = 10.0;
+SF = 5.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
-load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")
+load("GMs/UsedRecords/RSN169_IMPVALLH2.mat")
 ugddot = SF * TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
 dtrec = round(0.005,3);                      % Time step of record.
@@ -97,9 +101,11 @@ BridgeResponse.V_Track = zeros(2,bsteps);
 
 % Extra output variables
 Momt = [0 0 0 0]';
-Creepforces = zeros(4,tsteps);
-delta       = zeros(4,tsteps);
+Creepforces = zeros(4, tsteps);
+delta       = zeros(4, tsteps);
 deltadotn_vec = [0 0 0 0];
+Left_Cont = zeros(1, tsteps);
+Right_Cont =zeros(1, tsteps);
 
 %% Mass, Stiffness and Damping Matrices
 % Call the functions that create the stiffness and damping matrices
@@ -154,9 +160,10 @@ for it = 2:tsteps
         RWheel_geom_fine ...
         );
     
-    % Updated force vector
-    Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), 0, -F(1, 2), -F(2, 2), 0]';
+    % Force Vector to Structure
+    Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
     
+    % Force vector to train
     Cforce = 10 ^ 6 * [0, 0, 0, 0, 0, 0, F(1, 1) + F(1, 2), F(2, 1) + F(2, 2), F(3, 1) + F(3, 2)]';
     
     F_ext =  F_ine + Cforce; % N

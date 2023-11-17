@@ -86,8 +86,10 @@ while norm(Pui) > 0.01 && count < PlasticHingePar.maxNumIter
     
     Pri = BridgePar.Kts * Ui + ...
         + [0, BridgeResponse.Mtheta(ib), 0, 0, 0, 0, 0, 0, 0]';
-
-
+    
+    disp("Eq. Iteration no.")
+    disp(count)
+    
     if count == PlasticHingePar.maxNumIter - 1
         disp('Max Number of Iterations Reached')
     end
@@ -115,7 +117,8 @@ while norm(Pui) > 0.01 && count < PlasticHingePar.maxNumIter
     
     [TState,CState,PlasticHingePar] = setTrialStateBWBNwD(TState,CState,PlasticHingePar,BridgePar); % Update state
     
-    PlasticHingePar.xmaxp = max(abs(BridgeResponse.X(2,:)));
+    % PlasticHingePar.xmaxp = max(abs(BridgeResponse.X(2,:)));
+    PlasticHingePar.xmaxp = max([PlasticHingePar.xmaxp, TState.strain]);
     BridgeResponse.Mtheta(ib) = TState.stress;
     BridgeResponse.ktheta(ib) = TState.tangent;
     BridgeResponse.eps(ib)    = TState.e;
