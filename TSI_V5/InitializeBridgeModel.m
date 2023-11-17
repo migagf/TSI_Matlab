@@ -1,4 +1,4 @@
-% Initialize Structural Model 
+% Initialize Structural Model
 
 % ------------------------------------------------------------------------
 % Structure's Parameters
@@ -23,18 +23,18 @@ PlasticHingePar.alpha    = 0.007;
 PlasticHingePar.ko       = PlasticHingePar.Fy/PlasticHingePar.thetay;
 PlasticHingePar.n        = 1.28;
 PlasticHingePar.eta      = 0.0;
-PlasticHingePar.beta     = 17000;
+PlasticHingePar.beta     = 17000/(1 + NL*17000);
 
 PlasticHingePar.rhoeps   = 0.0;
-PlasticHingePar.rhox     = 0.25; % 0.11
+PlasticHingePar.rhox     = NL*0.25; % 0.11
 PlasticHingePar.phi      = 1.6;
-PlasticHingePar.deltak   = 15.0; % 47.0 Real = 40
-PlasticHingePar.deltaf   = 0.50;  % 0.5
+PlasticHingePar.deltak   = NL*15.0; % 47.0 Real = 40
+PlasticHingePar.deltaf   = NL*0.50;  % 0.5
 
 PlasticHingePar.sigma = 0.01;
 PlasticHingePar.u     = 4.0;
 PlasticHingePar.epsp  = 0.001;
-PlasticHingePar.rhop  = 0.1;
+PlasticHingePar.rhop  = 0*0.1;
 
 PlasticHingePar.xmax  = 0;
 PlasticHingePar.xmaxp = 0;
@@ -125,13 +125,13 @@ BridgeResponse.V_Track = zeros(2,bsteps);
 % l2: distance from the center of pier to the top of pier
 % l3: distance from the center of pier to the base of the rail
 
-kh = 1.0e6;        % N/m
-kv = 6.0e6;        % N/m
-ktheta = 1.0e6;    % N-m/rad
+kh = 10.9e6;        % N/m
+kv = 30.9e6;        % N/m
+ktheta = 58.0e3;    % N-m/rad
 
-ch = 1.0e6;        % N/m
-cv = 1.0e6;        % N/m
-ctheta = 1.0e6;    % N-m/rad
+ch = 6.0e6;        % N-s/m
+cv = 6.0e6;        % N-s/m
+ctheta = 5.0e4;    % N-s-m/rad
 
 krail1 = k_rail(kh, kv, ktheta, 0.5,  0.2);
 krail2 = k_rail(kh, kv, ktheta, 0.5,  0.8);

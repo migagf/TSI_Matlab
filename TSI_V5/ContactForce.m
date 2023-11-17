@@ -234,7 +234,8 @@ NF_L = Nforce_L1 + Nforce_L2;
 NF_R = Nforce_R1 + Nforce_R2;
 
 delta = [delta_L1;delta_L2;delta_R1;delta_R2];
-Momt = [Momt, [phi_cont_L1 phi_cont_L1 phi_cont_L1 phi_cont_L1]'];
+Momt = [phi_cont_L1 phi_cont_L1 phi_cont_L1 phi_cont_L1]';
+
 Uplift = [D_LW , D_RW];
 
 end

@@ -44,7 +44,7 @@ if delta == 0
     RyRail  = RailProps.R1y;
 end
 
-RyWheel = RyWheel;
-RyRail  = RyRail ;
+%RyWheel = RyWheel;
+%RyRail  = RyRail ;
 
 end

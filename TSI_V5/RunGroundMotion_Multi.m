@@ -78,7 +78,7 @@ else
     InitializeBridgeModel_LE
 end
 
-%% Initial conditions and prellocation of variables
+%% Initial conditions and preallocation of variables
 
 X = zeros(9,tsteps); % Train Global Coordinates 
 V = zeros(9,tsteps); % Train Velocities
