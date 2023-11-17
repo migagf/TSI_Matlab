@@ -23,7 +23,7 @@ PlasticHingePar.alpha    = 0.007;
 PlasticHingePar.ko       = PlasticHingePar.Fy/PlasticHingePar.thetay;
 PlasticHingePar.n        = 1.28;
 PlasticHingePar.eta      = 0.0;
-PlasticHingePar.beta     = 17000/(1 + NL*17000);
+PlasticHingePar.beta     = 17000/(1 + (1 - NL)*17000);
 
 PlasticHingePar.rhoeps   = 0.0;
 PlasticHingePar.rhox     = NL*0.25; % 0.11

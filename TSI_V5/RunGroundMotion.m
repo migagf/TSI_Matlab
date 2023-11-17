@@ -6,7 +6,7 @@ nfig = 0;
 showplot = 0;
 
 % Factor for LE Bridge or NL Bridge
-LE = 1.0;
+NL = 0.0;
 %% Load Data
 load WheelGeom
 load RailGeom
