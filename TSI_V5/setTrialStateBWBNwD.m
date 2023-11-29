@@ -54,7 +54,6 @@ Tzold = startPoint;
 Tznew = 1.0;
 
 while ((abs(Tzold-Tznew) > tolerance) && count < maxNumIter)
-
 	% Evaluate function f
 
 	gp = exp((-0.5)*(Cstrain/sigma)^u);

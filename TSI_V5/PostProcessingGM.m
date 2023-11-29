@@ -13,9 +13,7 @@ tmax = 14;
 % plot(t(1:end-1),Ek+Ep,t(1:end-1),Ek,t(1:end-1),Ep)
 
 %% Plot translations and rotations
-nfig = nfig+1; 
-figure(nfig)
-
+figure()
 subplot(4,1,1)
 plot(tt,-X(8,:)+X(8,1),tt,-X(5,:)+X(5,1),tt,-X(2,:)+X(2,1),tb,-BridgeResponse.X_Track(2,:))
 ylabel('Vertical trans. (m)'), xlabel('Time (s)')
@@ -52,10 +50,25 @@ legend('L. Wheel','R. Wheel','location','eastoutside')
 % plot(tt,Uddot_car/9.81+ax_track_interp), xlabel('Time (s)'), ylabel('Car Acceleration (g)'), grid on
 
 %% Plot Moment-Rotation of Plastic Hinge
-nfig = nfig+1; 
-figure(nfig)
+figure()
 subplot(2,2,1), plot(tb,BridgeResponse.X(1,:)), xlabel('Time (s)'), ylabel('Top Lateral Disp (m)'), grid on
 subplot(2,2,3), plot(tb,BridgeResponse.X(2,:),tb,BridgeResponse.X(3,:)), xlabel('Time (s)'), ylabel('Rotation (rad)'), legend('Plastic Hinge','Top of the Column'), grid on
 subplot(2,2,2), plot(BridgeResponse.X(2,:),BridgeResponse.Mtheta/1000), xlabel('Plastic Hinge Rotation (rad)'), ylabel('Base Moment (kN-m)'), grid on
 subplot(2,2,4), plot(-BridgeResponse.X(1,:),BridgeResponse.Mtheta/1000), xlabel('Top Lateral Disp (m)'), ylabel('Base Moment (kN-m)'), grid on
+
+%% Nadal Index
+NadalL = (movmedian(YL, 200)./movmedian(QL, 200));
+NadalR = (movmedian(YR, 200)./movmedian(QR, 200));
+
+tmin = 0;
+tmax = inf;
+figure()
+subplot(3,1,1), plot(tt, NadalL, 'r'), xlim([tmin, tmax]), ylim([-2.0, 2.0]), ylabel('Nadal Left Wheel') %, ylim([-100 100])
+subplot(3,1,2), plot(tt, NadalR, 'k'), xlim([tmin, tmax]), ylim([-2.0, 2.0]), ylabel('Nadal Right Wheel') %, ylim([-100 100])
+subplot(3,1,3), plot(tt, BridgeResponse.Xdot(1,:)/9.81), xlim([tmin, tmax]), ylabel('Bridge Vel. (m/s)')
+
+
+
+
+
 

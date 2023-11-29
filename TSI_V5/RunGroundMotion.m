@@ -6,7 +6,7 @@ nfig = 0;
 showplot = 0;
 
 % Factor for LE Bridge or NL Bridge
-NL = 0.0;
+NL = 1.0;
 %% Load Data
 load WheelGeom
 load RailGeom
@@ -29,10 +29,10 @@ CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 
 %% Forcing parameters
-SF = 5.0;
+SF = 8.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
-load("GMs/UsedRecords/RSN169_IMPVALLH2.mat")
+load("GMs/UsedRecords/RSN020_NCALIFH1.mat")
 ugddot = SF * TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
 dtrec = round(0.005,3);                      % Time step of record.
@@ -107,6 +107,14 @@ deltadotn_vec = [0 0 0 0];
 Left_Cont = zeros(1, tsteps);
 Right_Cont =zeros(1, tsteps);
 
+
+% Contact forces (storage)
+QL = zeros(1, tsteps);
+QR = zeros(1, tsteps);
+YL = zeros(1, tsteps);
+YR = zeros(1, tsteps);
+
+
 %% Mass, Stiffness and Damping Matrices
 % Call the functions that create the stiffness and damping matrices
 
@@ -180,7 +188,12 @@ for it = 2:tsteps
     % Variable storage
     % vrel(i) = V2(7)-vx_track(i); vect(i,:) = Ft;
     Left_Cont(it) = 1000*NF_L; Right_Cont(it) = 1000*NF_R;
-    
+    % Contact forces (storage)
+    QL(it) = F(2, 1);
+    QR(it) = F(2, 2);
+    YL(it) = F(1, 1);
+    YR(it) = F(1, 2);
+
     %Numerical integration of Train EOM
     A2 = M \ (F_ext - K * X2 - C * V2);
     
@@ -197,6 +210,7 @@ toc
 %%  Post Processing
 
 PostProcessingGM
+
 
 % hold off
 % figure(3)

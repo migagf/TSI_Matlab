@@ -70,6 +70,7 @@ count = 0;
 while norm(Pui) > 0.01 && count < PlasticHingePar.maxNumIter
     % Calculate Trial Resisting Forces
     iter(ib) = count;
+    
     % Pri = [12*BridgePar.E*BridgePar.I/BridgePar.L^3*Ui(1) + ...
     %         6*BridgePar.E*BridgePar.I/BridgePar.L^2*Ui(2) + ...
     %         6*BridgePar.E*BridgePar.I/BridgePar.L^2*Ui(3);
@@ -86,9 +87,6 @@ while norm(Pui) > 0.01 && count < PlasticHingePar.maxNumIter
     
     Pri = BridgePar.Kts * Ui + ...
         + [0, BridgeResponse.Mtheta(ib), 0, 0, 0, 0, 0, 0, 0]';
-    
-    disp("Eq. Iteration no.")
-    disp(count)
     
     if count == PlasticHingePar.maxNumIter - 1
         disp('Max Number of Iterations Reached')

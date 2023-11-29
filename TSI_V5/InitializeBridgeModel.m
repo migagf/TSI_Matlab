@@ -149,7 +149,7 @@ mfull = diag([ ...
     BridgePar.mass/1000, BridgePar.mass/1000, BridgePar.itheta/1000]);
 
 % Here, pay attention to the mass and inertia of the track assemblies
-%[phi, tn, xin] = eigenvalue(mfull, kfull, cfull);
+[phi, tn, xin] = eigenvalue(mfull, kfull, cfull);
 
 
 BridgePar.M = mfull;
