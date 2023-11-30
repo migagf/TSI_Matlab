@@ -9,7 +9,6 @@ on_bridge = false;
 % Factor for LE Bridge or NL Bridge
 NL = 1.0;
 
-
 %% Load Data
 load WheelGeom
 load RailGeom
@@ -18,8 +17,8 @@ RailProps.E1 = RailProps.E1;
 RailProps.E1 = RailProps.E1;
 
 %% Solution Parameters
-dtt = 5.0E-4;   % time step (sec) of train
-dtb = 5.0E-4;   % time step (sec) of bridge 
+dtt = 0.5E-4;   % time step (sec) of train
+dtb = 0.5E-4;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
@@ -27,10 +26,10 @@ phi = 0.5;
 
 g   = 9.81;       % m/s2
 Vel = 0.01/3.6;   % m/sec
-CF  = 0.0;        % 1 for coupled analysis, 0 for uncoupled
+CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 1.0;
+SF = 0.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
 load("GMs/UsedRecords/RSN020_NCALIFH1.mat")
@@ -44,10 +43,10 @@ trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector
 %ugddot = [0 diff(ugdot)]/(dtrec);           % Acceleration Time-History
 
 ugdot = cumtrapz(ugddot) * dtrec;
-urec  = cumtrapz(ugdot) * dtrec;
+urec = cumtrapz(ugdot) * dtrec;
 
-% Plot EQ record
-nfig = nfig + 1;
+% Plot EQ record 
+nfig = nfig + 1; 
 
 % figure(nfig) 
 % subplot(3,1,1), plot(trec,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
