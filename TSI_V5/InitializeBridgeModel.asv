@@ -183,17 +183,17 @@ else
     
     
     % Force collocation vector
-    BridgePar.r  = [1, 0, 0, 1, 0, 0]';    % 6 dof model
+    BridgePar.r  = [1, 0, 0, 1, 0, 0, 1, 0, 0]';    % 9 dof model
     
     
     % Initial Conditions
-    BridgeResponse.X = zeros(6,length(tb));
-    BridgeResponse.Xdot = zeros(6,length(tb));
-    BridgeResponse.Xddot = zeros(6,length(tb));
-    BridgeResponse.Peff = zeros(6,length(tb));
-    BridgeResponse.Pr0 = zeros(6,length(tb));
-    BridgeResponse.X_Track = zeros(6,bsteps);
-    BridgeResponse.V_Track = zeros(6,bsteps);
+    BridgeResponse.X = zeros(9,length(tb));
+    BridgeResponse.Xdot = zeros(9,length(tb));
+    BridgeResponse.Xddot = zeros(9,length(tb));
+    BridgeResponse.Peff = zeros(9,length(tb));
+    BridgeResponse.Pr0 = zeros(9,length(tb));
+    BridgeResponse.X_Track = zeros(9,bsteps);
+    BridgeResponse.V_Track = zeros(9,bsteps);
     
     
     %load BridgeIC % Load Initial Conditions of Bridge
@@ -212,19 +212,40 @@ else
     cv = 6.0e6;        % N-s/m
     ctheta = 5.0e4;    % N-s-m/rad
     
-    krail1 = diag([kh, kv, ktheta]);
-    krail2 = diag([kh, kv, ktheta]);
+    % Ballast properties
+    khb = 10.9e6 * 1000;
+    kvb = 30.9e6 * 1000;
+    kthetab = 58.0e3 * 1000;
+
+    chb = 6.0e6;        % N-s/m
+    cvb = 6.0e6;        % N-s/m
+    cthetab = 5.0e4;    % N-s-m/rad
+
+    l = 0.8;           % Gauge of tracks
     
-    crail1 = diag([ch, cv, ctheta]);
-    crail2 = diag([ch, cv, ctheta]);
+    kfull = [
+        2 * kh + khb, 0, 0, -kh, 0, 0, -kh, 0, 0;
+        0, 2 * kv + kvb, 0, 0, -kv, 0, 0, -kv, 0;
+        0, 0, kthetab + l * kv + 2 * ktheta, 0, -l / 2 * kv, -ktheta, 0, - l/2 * kv, -ktheta;
+        -kh, 0, 0, kh, 0, 0, 0, 0, 0;
+        0, -kv, -kv * l / 2, 0, kv, 0, 0, 0, 0;
+        0, 0, -ktheta, 0, 0, ktheta, 0, 0, 0;
+        -kh, 0, 0, 0, 0, 0, kh, 0, 0;
+        0 -kv, -kv * l / 2, 0, 0, 0, 0, kv, 0;
+        0, 0, -ktheta, 0, 0, 0, 0, 0, ktheta];
+
+    cfull = [
+        2 * ch + chb, 0, 0, -ch, 0, 0, -ch, 0, 0;
+        0, 2 * cv + cvb, 0, 0, -cv, 0, 0, -cv, 0;
+        0, 0, cthetab + l * cv + 2 * ctheta, 0, -l / 2 * cv, -ctheta, 0, - l/2 * cv, -ctheta;
+        -ch, 0, 0, ch, 0, 0, 0, 0, 0;
+        0, -cv, -cv * l / 2, 0, cv, 0, 0, 0, 0;
+        0, 0, -ctheta, 0, 0, ctheta, 0, 0, 0;
+        -ch, 0, 0, 0, 0, 0, ch, 0, 0;
+        0 -cv, -cv * l / 2, 0, 0, 0, 0, cv, 0;
+        0, 0, -ctheta, 0, 0, 0, 0, 0, ctheta];
     
-    kfull = diag([diag(krail1); diag(krail2)]);
-    cfull = diag([diag(crail1); diag(crail2)]);
-    
-    mfull = diag([ ...
-        BridgePar.mass, BridgePar.mass, BridgePar.itheta, ...
-        BridgePar.mass, BridgePar.mass, BridgePar.itheta]);
-    
+    mfull = diag([262914, 262914, 262914, 262914/1000, 262914, 262914, 262914, 262914, 262914]);
     
     BridgePar.M = mfull;
     BridgePar.Kt = kfull;
@@ -248,10 +269,6 @@ function [K, Ks] = kbridge(E,I,L,ktheta)
     Ks = [k11 k12 k13; k21 k22s k23; k31 k32 k33];
 end
 
-
-function [K] = kballast(k11, k22, k33)
-    K = diag([k11, k22, k33]);
-end
 
 
 function [k_r] = k_rail(kh, kv, ko, l2, l3)

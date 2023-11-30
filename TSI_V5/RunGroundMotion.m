@@ -3,7 +3,7 @@
 % scheme for the integration
 clear, clc, close all
 nfig = 0;
-showplot = 1;
+showplot = 0;
 on_bridge = false;
 
 % Factor for LE Bridge or NL Bridge
@@ -17,9 +17,10 @@ load RailProps
 RailProps.E1 = RailProps.E1;
 RailProps.E1 = RailProps.E1;
 
+
 %% Solution Parameters
-dtt = 5.0E-4;   % time step (sec) of train
-dtb = 5.0E-4;   % time step (sec) of bridge 
+dtt = 1.0E-3;   % time step (sec) of train
+dtb = 1.0E-3;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
@@ -27,13 +28,13 @@ phi = 0.5;
 
 g   = 9.81;       % m/s2
 Vel = 0.01/3.6;   % m/sec
-CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
+CF  = 0.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 1.0;
+SF = 10.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
-load("GMs/UsedRecords/RSN020_NCALIFH1.mat")
+load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")
 ugddot = SF * TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
 dtrec = round(0.005,3);                      % Time step of record.
@@ -144,6 +145,7 @@ tic
 ib = 2; tbridge = 0;
 
 for it = 2:tsteps
+    disp(it * dtb)
     % Integration of Train EOM
     X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
     V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
@@ -171,12 +173,7 @@ for it = 2:tsteps
         );
     
     % Force Vector to Structure
-    if on_bridge
-        Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
-    else
-        disp('Contact Force:')
-        Cont_Force = 10 ^ 6 * [-F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
-    end
+    Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
 
     % Force vector to train
     Cforce = 10 ^ 6 * [0, 0, 0, 0, 0, 0, F(1, 1) + F(1, 2), F(2, 1) + F(2, 2), F(3, 1) + F(3, 2)]';
@@ -194,7 +191,8 @@ for it = 2:tsteps
     
     % Variable storage
     % vrel(i) = V2(7)-vx_track(i); vect(i,:) = Ft;
-    Left_Cont(it) = 1000*NF_L; Right_Cont(it) = 1000*NF_R;
+    Left_Cont(it) = 1000 * NF_L; 
+    Right_Cont(it) = 1000 * NF_R;
 
     % Contact forces (storage)
     QL(it) = F(2, 1);

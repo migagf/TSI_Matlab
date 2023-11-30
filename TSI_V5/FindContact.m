@@ -1,5 +1,5 @@
 function [delta_z1,maxDz1,phi_cont1,delta_z2,maxDz2,phi_cont2,d] = FindContact(WheelGeom,RailGeom)
-n_points = 500;
+n_points = 50;
 
 % Establish search limits
 L_lim = max(min(WheelGeom(:,1)),min(RailGeom(:,1)));
