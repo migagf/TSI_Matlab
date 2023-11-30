@@ -27,7 +27,7 @@ phi = 0.5;
 
 g   = 9.81;       % m/s2
 Vel = 0.01/3.6;   % m/sec
-CF  = 0.0;        % 1 for coupled analysis, 0 for uncoupled
+CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
 SF = 1.0;
