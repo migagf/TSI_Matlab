@@ -38,15 +38,15 @@ R_w = R_wg - R_track;  % Wheelset location in track coordinate system
 
 % Left rail (All these values are provided in track coordinate system)
 phi_Lr = -phi_tr - Us(3);                       % Rotation of the left rail
-Z_Lr  = - 3.124 * 25.4 /1000 + Us(2) + Z_tr; %-Z_tr;    % Vertical position of the left rail (m)   
-Y_Lr  = -34.3355 * 25.4/1000 + Us(1) + Y_tr; %-Y_tr;  % Horizontal position of the left rail (m)
+Z_Lr  = - 3.124 * 25.4 /1000 + Us(2); %-Z_tr;    % Vertical position of the left rail (m)   
+Y_Lr  = -34.3355 * 25.4/1000 + Us(1); %-Y_tr;  % Horizontal position of the left rail (m)
 
 R_Lr = [Y_Lr Z_Lr];                 % R vector, in global coordinate system
 
 % Right rail (All these values are provided in track coordinate system)
 phi_Rr = -phi_tr - Us(6);                    % Rotation of the left rail
-Z_Rr  = -3.124*25.4/1000 + Us(5) - Z_tr; %-Z_tr;    % Vertical position of the left rail (m)   
-Y_Rr  = 34.3355*25.4/1000 + Us(4) - Y_tr; %-Y_tr;  % Horizontal position of the left rail (m)  
+Z_Rr  = -3.124*25.4/1000 + Us(5); %-Z_tr;    % Vertical position of the left rail (m)   
+Y_Rr  = 34.3355*25.4/1000 + Us(4); %-Y_tr;  % Horizontal position of the left rail (m)  
 
 R_Rr = [Y_Rr Z_Rr];                 % R vector, in track coordinate system
 

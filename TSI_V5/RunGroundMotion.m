@@ -19,8 +19,8 @@ RailProps.E1 = RailProps.E1;
 
 
 %% Solution Parameters
-dtt = 1.0E-3;   % time step (sec) of train
-dtb = 1.0E-3;   % time step (sec) of bridge 
+dtt = 0.5E-3;   % time step (sec) of train
+dtb = 0.5E-3;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
@@ -28,10 +28,10 @@ phi = 0.5;
 
 g   = 9.81;       % m/s2
 Vel = 0.01/3.6;   % m/sec
-CF  = 0.0;        % 1 for coupled analysis, 0 for uncoupled
+CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 10.0;
+SF = 1.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
 load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")
@@ -145,7 +145,7 @@ tic
 ib = 2; tbridge = 0;
 
 for it = 2:tsteps
-    disp(it * dtb)
+    
     % Integration of Train EOM
     X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
     V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
