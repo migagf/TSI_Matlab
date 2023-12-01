@@ -213,11 +213,11 @@ else
     ctheta = 5.0e4;    % N-s-m/rad
     
     % Ballast properties
-    khb = 10.9e6;
-    kvb = 30.9e6 * 100;
-    kthetab = 58.0e3 * 100;
+    khb = 10.9e6 / 10;
+    kvb = 30.9e6 * 10;
+    kthetab = 58.0e3;
 
-    chb = 6.0e6 * 0;        % N-s/m
+    chb = 6.0e6;        % N-s/m
     cvb = 6.0e6;        % N-s/m
     cthetab = 5.0e4;    % N-s-m/rad
 

@@ -31,14 +31,14 @@ Vel = 0.01/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 1.0;
+SF = 0.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
 load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")
 ugddot = SF * TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
 dtrec = round(0.005,3);                      % Time step of record.
-ugddot = [0*(0:dtrec:1)'; ugddot];
+ugddot = [0*(0:dtrec:2)'; ugddot];
 trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector 
 
 %ugdot  = [0 diff(urec')]/(dtrec);           % Velocity Time-History
