@@ -1,13 +1,20 @@
-%% Solution of the equation of motion
-% This code solves the equation of motion of the system, using an explicit
-% scheme for the integration
+% RUN MULTI CASES
+% Runs the time history analysis for multiple ground motions
 clear, clc, close all
 nfig = 0;
-showplot = 1;
-on_bridge = false;
+showplot = 0;
+on_bridge = true;
 
-% Factor for LE Bridge or NL Bridge
-NL = 1.0;
+
+% Load all Ground Motions and the scale factors
+AllGMs = dir("GMs\UsedRecords\*.mat");
+load("GMs\ScaleFactors.mat");
+
+NL_vals = [1.0 0.0];         % Linear/Nonlinear Analysis Cases
+CF_vals = [1.0 0.0];         % Coupling Factor Cases
+SP_vals = [0.01 40 80];  % Speed of train
+SF_vals = [0.21 0.74 1.0 1.38 2.0];  % Hazard Cases
+
 
 %% Load Data
 load WheelGeom
@@ -16,37 +23,62 @@ load RailProps
 RailProps.E1 = RailProps.E1;
 RailProps.E1 = RailProps.E1;
 
+
+%% Load Train Data
+CreateWheelRailGeom
+
+
 %% Solution Parameters
-dtt = 0.5E-4;   % time step (sec) of train
-dtb = 0.5E-4;   % time step (sec) of bridge 
+dtt = 5.0E-4;   % time step (sec) of train
+dtb = 5.0E-4;   % time step (sec) of bridge 
+
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
 phi = 0.5;
-
 g   = 9.81;       % m/s2
-Vel = 0.01/3.6;   % m/sec
-CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
+
+
+for SP_index = 1:1       %4         % Speed
+for GM_index = 1:20                 % GM index
+for SF_index = 1:5                  % Scale Factor
+for CF_index = 1:2                  % Coupling Factor
+for NL_index = 1:2                  % Linear/Nonlinear
+
+AnalysisCode = strcat('OB_',num2str(SP_index),'_',num2str(GM_index,"%02.f"),'_',num2str(SF_index),'_',num2str(CF_index),'_',num2str(NL_index));
+
+
+% Factor for LE Bridge or NL Bridge
+NL = NL_vals(NL_index);
+Vel = SP_vals(SP_index)/3.6;   % m/sec
+CF  = CF_vals(CF_index);
+HL = SF_vals(SF_index);
+SF = HL * ScaleFactors(GM_index);
+
 
 %% Forcing parameters
-SF = 0.0;
-
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
-load("GMs/UsedRecords/RSN020_NCALIFH1.mat")
+load("GMs\UsedRecords\"+AllGMs(GM_index).name);
+disp(AllGMs(GM_index).name)
+disp('SP_GM_SF_CF_NL')
+disp(AnalysisCode)
+disp('OF__1_20_5_2_2')
+
+% load("GMs/UsedRecords/RSN169_IMPVALLH2.mat")
 ugddot = SF * TimeAccelData(:,2) * 9.81;            % Displacement Time-History (m)
 
 dtrec = round(0.005,3);                      % Time step of record.
-ugddot = [0*(0:dtrec:1)'; ugddot];
+ugddot = [0*(0:dtrec:2)'; ugddot];
 trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector 
 
 %ugdot  = [0 diff(urec')]/(dtrec);           % Velocity Time-History
 %ugddot = [0 diff(ugdot)]/(dtrec);           % Acceleration Time-History
 
 ugdot = cumtrapz(ugddot) * dtrec;
-urec = cumtrapz(ugdot) * dtrec;
+urec  = cumtrapz(ugdot) * dtrec;
 
-% Plot EQ record 
-nfig = nfig + 1; 
+% Plot EQ record
+nfig = nfig + 1;
 
 % figure(nfig) 
 % subplot(3,1,1), plot(trec,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
@@ -65,9 +97,6 @@ ug = urec;
 
 tsteps = length(tt);
 bsteps = length(tb);
-
-%% Load Train Data
-CreateWheelRailGeom
 
 %% Initialize Bridge Data
 InitializeBridgeModel
@@ -143,6 +172,7 @@ tic
 ib = 2; tbridge = 0;
 
 for it = 2:tsteps
+    
     % Integration of Train EOM
     X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
     V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
@@ -152,8 +182,8 @@ for it = 2:tsteps
         X2(7:9)', ...
         V2(7:9)', ...
         [BridgeResponse.X_Track(1, ib-1), BridgeResponse.X_Track(2, ib-1), -BridgeResponse.X(3, ib-1)], ...
-        BridgeResponse.X(end-5:end,ib-1), ...
-        BridgeResponse.Xdot(end-5:end,ib-1), ...
+        BridgeResponse.Xt(end-5:end,ib-1), ...
+        BridgeResponse.Xtdot(end-5:end,ib-1), ...
         WheelGeom_pol, ...
         RailGeom_pol, ...
         RailGeom_cur, ...
@@ -170,12 +200,7 @@ for it = 2:tsteps
         );
     
     % Force Vector to Structure
-    if on_bridge
-        Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
-    else
-        disp('Contact Force:')
-        Cont_Force = 10 ^ 6 * [-F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
-    end
+    Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
 
     % Force vector to train
     Cforce = 10 ^ 6 * [0, 0, 0, 0, 0, 0, F(1, 1) + F(1, 2), F(2, 1) + F(2, 2), F(3, 1) + F(3, 2)]';
@@ -193,7 +218,8 @@ for it = 2:tsteps
     
     % Variable storage
     % vrel(i) = V2(7)-vx_track(i); vect(i,:) = Ft;
-    Left_Cont(it) = 1000*NF_L; Right_Cont(it) = 1000*NF_R;
+    Left_Cont(it) = 1000 * NF_L; 
+    Right_Cont(it) = 1000 * NF_R;
 
     % Contact forces (storage)
     QL(it) = F(2, 1);
@@ -213,11 +239,21 @@ for it = 2:tsteps
 end
 
 toc
+disp("-------")
+
+save(strcat("Runs_OB\", AnalysisCode))
+
+end
+end
+end
+end
+end
+
+disp('All Done')
 
 %%  Post Processing
 
 PostProcessingGM
-
 
 % hold off
 % figure(3)

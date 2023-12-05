@@ -25,7 +25,7 @@ for File = 1:length(TheFiles)
 
     % Obtain max response of bridge
     PeakDBridge = max(abs(DataSet.BridgeResponse.X(1,1:end)));
-    PeakVBridge = peak2peak(DataSet.BridgeResponse.Xtdot(1,1:end));
+    PeakVBridge = max(abs(DataSet.BridgeResponse.Xdot(1,1:end)));
     PeakABridge = max(abs(DataSet.BridgeResponse.Xddot(1,1:end)));
     PeakRBridge = max(abs(DataSet.BridgeResponse.X(2,1:end)));
     
@@ -37,8 +37,7 @@ for File = 1:length(TheFiles)
     PeakRWheelSet  = max(abs(DataSet.TrainResponse.X(9,1:firstDerail)));
     
 
-    PeakRotUplift  = max(abs(DataSet.TrainResponse.X(9,1:firstDerail) + DataSet.BridgeResponse.X(3,1:firstDerail) + ...
-        - (DataSet.BridgeResponse.X(8, 1:firstDerail) - DataSet.BridgeResponse.X(5, 1:firstDerail))/0.8));
+    PeakRotUplift  = max(abs(DataSet.TrainResponse.X(9,1:firstDerail) + DataSet.BridgeResponse.X(3,1:firstDerail)));
     
 
     % plot(DataSet.TrainResponse.X(9,:)+DataSet.BridgeResponse.X(3,:))

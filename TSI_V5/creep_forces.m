@@ -3,7 +3,7 @@ function [Ft] = creep_forces(a,b,Fn,Vn,omega,Vel,RailProps)
 G = RailProps.E1/(2*(1+RailProps.v1)); %MPa
 mu = 0.2; % Friction Coefficient
 
-method = 'carter';
+method = 'kalker';
 
 switch method
     case 'kalker'

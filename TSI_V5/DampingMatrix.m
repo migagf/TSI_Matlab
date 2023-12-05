@@ -8,11 +8,11 @@ Htw =  5*2.54/100;   %  1 (in) but in (m)
 dtc = 38.9685*2.54/100;  % Half distance from springs in secondary suspension system
 dpc = 38.9685*2.54/100;  % Half distance from springs in primary susp. system
 
-Cty = (17068*2)*2;     % Damping coefficient of secondary suspension along Y axis (N-s/m)
-Ctz = (17068*2)*2;     % Damping coefficient of secondary suspension along Z axis (N-s/m)
+Cty = (17068*2)*2*2;     % Damping coefficient of secondary suspension along Y axis (N-s/m)
+Ctz = (17068*2)*2*2;     % Damping coefficient of secondary suspension along Z axis (N-s/m)
 
-Cpy = (17068*2)*2;     % Damping coefficient of primary suspension along Z axis (N-s/m)
-Cpz = (17068*2)*2;     % Damping coefficient of primary suspension along Z axis (N-s/m)
+Cpy = (17068*2)*2*2;     % Damping coefficient of primary suspension along Z axis (N-s/m)
+Cpz = (17068*2)*2*2;     % Damping coefficient of primary suspension along Z axis (N-s/m)
 
 %% Damping Matrix Assemble
 

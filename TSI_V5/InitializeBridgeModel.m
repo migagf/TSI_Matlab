@@ -111,7 +111,9 @@ if on_bridge
     
     % Initial Conditions
     BridgeResponse.X = zeros(9,length(tb));
+    BridgeResponse.Xt = zeros(9,length(tb));
     BridgeResponse.Xdot = zeros(9,length(tb));
+    BridgeResponse.Xtdot = zeros(9,length(tb));
     BridgeResponse.Xddot = zeros(9,length(tb));
     BridgeResponse.Peff = zeros(9,length(tb));
     BridgeResponse.Pr0 = zeros(9,length(tb));
@@ -188,7 +190,9 @@ else
     
     % Initial Conditions
     BridgeResponse.X = zeros(9,length(tb));
+    BridgeResponse.Xt = zeros(9,length(tb));
     BridgeResponse.Xdot = zeros(9,length(tb));
+    BridgeResponse.Xtdot = zeros(9,length(tb));
     BridgeResponse.Xddot = zeros(9,length(tb));
     BridgeResponse.Peff = zeros(9,length(tb));
     BridgeResponse.Pr0 = zeros(9,length(tb));
@@ -213,9 +217,9 @@ else
     ctheta = 5.0e4;    % N-s-m/rad
     
     % Ballast properties
-    khb = 10.9e6 / 10;
-    kvb = 30.9e6 * 10;
-    kthetab = 58.0e3;
+    khb = 10.9e6 * 10;
+    kvb = 30.9e6 * 1000;
+    kthetab = 58.0e3 * 1000;
 
     chb = 6.0e6;        % N-s/m
     cvb = 6.0e6;        % N-s/m
@@ -245,7 +249,7 @@ else
         0 -cv, -cv * l / 2, 0, 0, 0, 0, cv, 0;
         0, 0, -ctheta, 0, 0, 0, 0, 0, ctheta];
     
-    mfull = diag([BridgePar.mass/1000, BridgePar.mass/10, BridgePar.itheta/100, ...
+    mfull = diag([BridgePar.mass, BridgePar.mass, BridgePar.itheta, ...
         BridgePar.mass/1000, BridgePar.mass/1000, BridgePar.itheta/1000, ...
         BridgePar.mass/1000, BridgePar.mass/1000, BridgePar.itheta/1000]);
     
