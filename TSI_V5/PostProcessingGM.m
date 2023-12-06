@@ -1,6 +1,6 @@
 %% Post Processing
-tmin = 2;
-tmax = 14;
+tmin = 0;
+tmax = max(trec);
 
 %% Normal Forces
 % nfig = nfig+1; 
@@ -14,26 +14,20 @@ tmax = 14;
 
 %% Plot translations and rotations
 figure()
-subplot(4,1,1)
-plot(tt,-X(8,:)+X(8,1),tt,-X(5,:)+X(5,1),tt,-X(2,:)+X(2,1),tb,-BridgeResponse.X_Track(2,:))
-ylabel('Vertical trans. (m)'), xlabel('Time (s)')
-axis([tmin tmax -0.05 0.05]), grid on
-legend('Wheelset','Bogie','Car','location','eastoutside')
-
-subplot(4,1,2), plot(tt,X(7,:),tt,X(4,:),tt,X(1,:),tb,BridgeResponse.X_Track(1,:))
+subplot(3,1,1), plot(tt,X(7,:),tt,X(4,:),tt,X(1,:),tb,BridgeResponse.X_Track(1,:))
 ylabel('Horiz. trans. (m)'), xlabel('Time (s)')
-axis([tmin tmax -0.20 0.20]), grid on
+xlim([tmin tmax]), grid on
 legend('Wheelset','Bogie','Car','location','eastoutside')
 
-subplot(4,1,3), plot(tt,X(9,:),tt,X(6,:),tt,X(3,:))
+subplot(3,1,2), plot(tt,X(9,:),tt,X(6,:),tt,X(3,:))
 ylabel('Rotation (-)'), xlabel('Time (s)')
-axis([tmin tmax -0.05 0.05]), grid on
+xlim([tmin tmax]), grid on
 legend('Wheelset','Bogie','Car','location','eastoutside')
 
-subplot(4,1,4)
-plot(tt,Left_Cont)
-hold on
-plot(tt,Right_Cont), axis([tmin tmax 0 500])
+subplot(3,1,3)
+plot(tt,Left_Cont, ...
+     tt, Right_Cont)
+xlim([tmin tmax])
 grid on
 xlabel('Time (sec)'), ylabel('Contact Force (kN)')
 legend('L. Wheel','R. Wheel','location','eastoutside')
@@ -63,7 +57,6 @@ NadalL = (movmedian(YL, 200)./movmedian(QL, 200));
 NadalR = (movmedian(YR, 200)./movmedian(QR, 200));
 
 tmin = 0;
-tmax = 30;
 
 figure()
 subplot(3,1,1), plot(tt, NadalL, 'r'), xlim([tmin, tmax]), ylim([-2.0, 2.0]), ylabel('Nadal Left Wheel') %, ylim([-100 100])
