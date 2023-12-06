@@ -4,7 +4,7 @@
 clear, clc, close all
 nfig = 0;
 showplot = 0;
-on_bridge = true;
+on_bridge = false;
 
 % Factor for LE Bridge or NL Bridge
 NL = 1.0;
@@ -27,11 +27,11 @@ psi = 0.5;
 phi = 0.5;
 
 g   = 9.81;       % m/s2
-Vel = 0.01/3.6;   % m/sec
+Vel = 0.001/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 2.0;
+SF = 5.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
 load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")

@@ -12,7 +12,7 @@ cont = 1;
 
 for i = 1:25:length(X(1,:))
     x_track(i) = BridgeResponse.X_Track(1,i);
-    z_track(i) = BridgeResponse.X_Track(2,i)+0.02;
+    z_track(i) = BridgeResponse.X_Track(2,i)+0.01;
     phi_track(i) = -BridgeResponse.X(3,i);
 
     X_ref = X(:,i);
