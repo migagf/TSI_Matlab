@@ -10,6 +10,12 @@ on_bridge = false;
 NL = 1.0;
 
 
+SFvals   = 0.1:0.05:5.0;
+freqvals = 0.1:0.05:5.0;
+
+for SF = SFvals
+for freq = freqvals
+
 %% Load Data
 load WheelGeom
 load RailGeom
@@ -31,19 +37,16 @@ Vel = 0.01/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 
-freqvals = 0.1:0.05:5.0;
-SFvals   = 0.1:0.05:5.0;
+
+
 
 %% Forcing parameters
 %SF = 1.0;
 %freq = 1.0;
 
-for SF = SFvals
-for freq = freqvals
+run_filename = strcat('Pulse_AG_SF', num2str(100 * SF, "%03.0f"), '_FQ', num2str(100 * freq, "%03.0f"));
 
-run_name = strcat('Pulse_AG_', num2str(100 * SF, "%03.0f"), '_', num2str(100 * freq, "%03.0f"));
-
-disp(strcat("Running Case:", run_name))
+disp(strcat("Running Case:", run_filename))
 
 % Create a wavelet for analysis of derailment
 wp = 2*pi*freq;
@@ -74,13 +77,13 @@ ug = urec;
 tsteps = length(tt);
 bsteps = length(tb);
 
-% Plot EQ record
-nfig = nfig + 1;
-
-figure() 
-subplot(3,1,1), plot(tt,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
-subplot(3,1,2), plot(tt,ugdot), xlabel('Time (sec)'), ylabel('Vel. (m/s)'), title('Ground Motion (LPE)')
-subplot(3,1,3), plot(tt,urec), xlabel('Time (sec)'), ylabel('Dis. (m)'), title('Ground Motion (LPE)')
+% % Plot EQ record
+% nfig = nfig + 1;
+% 
+% figure() 
+% subplot(3,1,1), plot(tt,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
+% subplot(3,1,2), plot(tt,ugdot), xlabel('Time (sec)'), ylabel('Vel. (m/s)'), title('Ground Motion (LPE)')
+% subplot(3,1,3), plot(tt,urec), xlabel('Time (sec)'), ylabel('Dis. (m)'), title('Ground Motion (LPE)')
 
 %% Load Train Data
 CreateWheelRailGeom
@@ -255,8 +258,10 @@ end
 
 toc
 
-save
+save(strcat("Pulses_NoBridge\", run_filename))
 disp("Done...")
+AnimateEarthquake
+clearvars -except CF dtb dtt freqvals g nfig NL on_bridge phi psi RailGeom RailProps SFvals showplot Vel WheelGeom SF freq
 
 end
 end
