@@ -3,7 +3,7 @@ clear, clc, close all
 
 
 % Load each run and store global response parameters
-TheFiles = dir("C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_OB\*.mat");
+TheFiles = dir("C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_AG\*.mat");
 SummMatrix = zeros(length(TheFiles),19);
 
 
