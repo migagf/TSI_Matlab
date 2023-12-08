@@ -11,7 +11,7 @@ for File = 1:length(TheFiles)
     % Load DataSet
     [DataSet] = LoadData(strcat(TheFiles(File).folder,'\' ,TheFiles(File).name));
     
-    RelDis_Wheel_Track = DataSet.TrainResponse.X(7,:)-DataSet.BridgeResponse.X_Track(1,:);
+    RelDis_Wheel_Track = DataSet.TrainResponse.X(7,:) - DataSet.BridgeResponse.X_Track(1,:);
     indexDerail = abs(RelDis_Wheel_Track) > 2.0*2.54/100; % Derailment cases
     
     if isempty(find(indexDerail, 1))

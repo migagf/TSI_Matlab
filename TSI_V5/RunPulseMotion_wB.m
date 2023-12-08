@@ -4,7 +4,7 @@
 clear, clc, close all
 nfig = 0;
 showplot = 0;
-on_bridge = false;
+on_bridge = true;
 
 % Factor for LE Bridge or NL Bridge
 NL = 1.0;
@@ -42,7 +42,7 @@ CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 %SF = 1.0;
 %freq = 1.0;
 
-run_filename = strcat('Pulse_AG_SF', num2str(100 * SF, "%03.0f"), '_FQ', num2str(100 * freq, "%03.0f"));
+run_filename = strcat('Pulse_OB_SF', num2str(100 * SF, "%03.0f"), '_FQ', num2str(100 * freq, "%03.0f"));
 
 disp(strcat("Running Case:", run_filename))
 
@@ -256,7 +256,7 @@ end
 
 toc
 
-save(strcat("Pulses_NoBridge\", run_filename))
+save(strcat("Pulses_wB\", run_filename))
 disp("Done...")
 
 % AnimateEarthquake

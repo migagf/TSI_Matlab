@@ -13,7 +13,7 @@ load("GMs\ScaleFactors.mat");
 NL_vals = [1.0 0.0];         % Linear/Nonlinear Analysis Cases
 CF_vals = [1.0 0.0];         % Coupling Factor Cases
 SP_vals = [0.01 40 80];  % Speed of train
-SF_vals = [0.21 0.74 1.0 1.38 2.0];  % Hazard Cases
+SF_vals = [0.21 0.74 1.0 1.38 2.0 3.0 4.0 5.0];  % Hazard Cases
 
 
 %% Load Data
@@ -41,7 +41,7 @@ g   = 9.81;       % m/s2
 
 for SP_index = 1:1       %4         % Speed
 for GM_index = 1:20                 % GM index
-for SF_index = 1:5                  % Scale Factor
+for SF_index = 6:8                  % Scale Factor
 for CF_index = 1:2                  % Coupling Factor
 for NL_index = 1:2                  % Linear/Nonlinear
 
@@ -177,6 +177,7 @@ for it = 2:tsteps
     X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
     V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
     
+    try
     % Update the force vector with Contact Algorithm
     [F,NF_L,NF_R,vec,Ft,delta(:,it-1),Momt] = ContactForce(...
         X2(7:9)', ...
@@ -198,7 +199,11 @@ for it = 2:tsteps
         LWheel_geom_fine, ...
         RWheel_geom_fine ...
         );
-    
+        pderail = 0;
+    catch
+        pderail = 1;
+        break
+    end
     % Force Vector to Structure
     Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
 
