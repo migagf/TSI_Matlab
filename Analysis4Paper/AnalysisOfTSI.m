@@ -3,14 +3,15 @@ clear, clc, close all
 
 
 % Load each run and store global response parameters
-TheFiles = dir("C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_AG\*.mat");
-SummMatrix = zeros(length(TheFiles),19);
+TheFiles = dir("C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_OB\*.mat");
+SummMatrix = zeros(length(TheFiles),20);
 
 
 for File = 1:length(TheFiles)
     % Load DataSet
     [DataSet] = LoadData(strcat(TheFiles(File).folder,'\' ,TheFiles(File).name));
-    
+    groundmotion = str2double(TheFiles(File).name(6:7));
+
     RelDis_Wheel_Track = DataSet.TrainResponse.X(7,:) - DataSet.BridgeResponse.X_Track(1,:);
     indexDerail = abs(RelDis_Wheel_Track) > 2.0*2.54/100; % Derailment cases
     
@@ -25,7 +26,7 @@ for File = 1:length(TheFiles)
 
     % Obtain max response of bridge
     PeakDBridge = max(abs(DataSet.BridgeResponse.X(1,1:end)));
-    PeakVBridge = peak2peak(DataSet.BridgeResponse.Xtdot(1,1:end));
+    PeakVBridge = max(abs(DataSet.BridgeResponse.Xdot(1,1:end)));
     PeakABridge = max(abs(DataSet.BridgeResponse.Xddot(1,1:end)));
     PeakRBridge = max(abs(DataSet.BridgeResponse.X(2,1:end)));
     
@@ -37,8 +38,8 @@ for File = 1:length(TheFiles)
     PeakRWheelSet  = max(abs(DataSet.TrainResponse.X(9,1:firstDerail)));
     
 
-    PeakRotUplift  = max(abs(DataSet.TrainResponse.X(9,1:firstDerail) + DataSet.BridgeResponse.X(3,1:firstDerail) + ...
-        - (DataSet.BridgeResponse.X(8, 1:firstDerail) - DataSet.BridgeResponse.X(5, 1:firstDerail))/0.8));
+    PeakRotUplift  = max(abs(DataSet.TrainResponse.X(9, 1:firstDerail) + DataSet.BridgeResponse.X(3, 1:firstDerail) + ...
+        - (DataSet.BridgeResponse.X(8, 1:firstDerail) - DataSet.BridgeResponse.X(5, 1:firstDerail))/1.2));
     
 
     % plot(DataSet.TrainResponse.X(9,:)+DataSet.BridgeResponse.X(3,:))
@@ -57,7 +58,7 @@ for File = 1:length(TheFiles)
         PeakDBridge, PeakVBridge, PeakABridge, PeakRBridge,...
         PeakDCarBody, PeakDWheelSet, PeakRCarBody, PeakRWheelSet,...
         PeakRotUplift, PeakAhCarBody, PeakAvCarBody,...
-        abs(PeakDBridge - PeakDWheelSet), DRCase];
+        abs(PeakDBridge - PeakDWheelSet), DRCase, groundmotion];
     
     clear DataSet
 
@@ -68,7 +69,7 @@ SummTable = array2table(SummMatrix,...
     {'hazlvl', 'cf', 'spd', 'bridgemodel', 'pga', 'pgv', ...
     'pbd', 'pbv', 'pba', 'pbrot', ... 
     'pcd', 'pwd', 'pcrot', 'pwrot', ...
-    'purot', 'pcha', 'pcva', 'drdis', 'drcase'});
+    'purot', 'pcha', 'pcva', 'drdis', 'drcase', 'gm'});
 
 save("SummTable", "SummTable")
 % [DataSet] = LoadData(TheFiles(File).name);
