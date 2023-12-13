@@ -32,19 +32,19 @@ for freq = freqvals
                 dr_type = 1;   % Derailment in slide-off mode
                 disp("Slide-off Derailment")
                 break
-            elseif (abs(X(7, it - 1) - BridgeResponse.X_Track(1, it - 1)) > 1.0 && rotation < pi/2)
-                dr_type = 2;
-                disp("Combined Derailment")
-                break           % Derailment in combined mode
-            elseif rotation > pi/2
+            elseif rotation > 0.9 * pi/2
                 dr_type = 3;   % Derailment in overturning mode
                 disp("Overturning Derailment")
                 break
+            elseif (abs(X(7, it - 1) - BridgeResponse.X_Track(1, it - 1)) > 1.0 && rotation < pi/3)
+                dr_type = 2;
+                disp("Combined Derailment")
+                break           % Derailment in combined mode
             else 
                 %dr_type = 0;
             end
         end
-        firstDerail = it;
+        firstDerail = it - 1;
 
         % Store responses of interest
         PeakDCarBody(freq_index, sf_index)   = max(abs(X(1,1:firstDerail) - BridgeResponse.X_Track(1,1:firstDerail)));
@@ -53,9 +53,10 @@ for freq = freqvals
         PeakRWheelSet(freq_index, sf_index)  = max(abs(X(9,1:firstDerail) + BridgeResponse.X(3,1:firstDerail)));
 
         
-        PeakRotUplift(freq_index, sf_index)  = max(abs(X(9, 1:firstDerail) + BridgeResponse.X(3, 1:firstDerail) + ...
-            - (BridgeResponse.X(8, 1:firstDerail) - BridgeResponse.X(5, 1:firstDerail))/1.2));
-
+%         PeakRotUplift(freq_index, sf_index)  = max(abs(X(9, 1:firstDerail) + BridgeResponse.X(3, 1:firstDerail) + ...
+%             - (BridgeResponse.X(8, 1:firstDerail) - BridgeResponse.X(5, 1:firstDerail))/1.2));
+        
+        PeakRotUplift(freq_index, sf_index) = rotation;
 
         derail_matrix(freq_index, sf_index) = dr_type;
     end
@@ -96,20 +97,20 @@ for freq = freqvals
                 dr_type = 1;   % Derailment in slide-off mode
                 disp("Slide-off Derailment")
                 break
-            elseif (abs(X(7, it - 1) - BridgeResponse.X_Track(1, it - 1)) > 1.0 && rotation < pi/2)
-                dr_type = 2;
-                disp("Combined Derailment")
-                break           % Derailment in combined mode
-            elseif rotation > pi/2
+            elseif rotation > 0.9 * pi/2
                 dr_type = 3;   % Derailment in overturning mode
                 disp("Overturning Derailment")
                 break
+            elseif (abs(X(7, it - 1) - BridgeResponse.X_Track(1, it - 1)) > 1.0 && rotation < pi/3)
+                dr_type = 2;
+                disp("Combined Derailment")
+                break           % Derailment in combined mode
             else 
                 %dr_type = 0;
             end
         end
 
-        firstDerail = it;
+        firstDerail = it - 1;
         
         % Store responses of interest
         PeakDCarBody(freq_index, sf_index)   = max(abs(X(1,1:firstDerail) - BridgeResponse.X_Track(1,1:firstDerail)));
@@ -117,10 +118,10 @@ for freq = freqvals
         PeakRCarBody(freq_index, sf_index)   = max(abs(X(3,1:firstDerail) + BridgeResponse.X(3,1:firstDerail)));
         PeakRWheelSet(freq_index, sf_index)  = max(abs(X(9,1:firstDerail) + BridgeResponse.X(3,1:firstDerail)));
 
+%         PeakRotUplift(freq_index, sf_index)  = max(abs(X(9, 1:firstDerail) + BridgeResponse.X(3, 1:firstDerail) + ...
+%             - (BridgeResponse.X(8, 1:firstDerail) - BridgeResponse.X(5, 1:firstDerail))/1.2));
         
-        PeakRotUplift(freq_index, sf_index)  = max(abs(X(9, 1:firstDerail) + BridgeResponse.X(3, 1:firstDerail) + ...
-            - (BridgeResponse.X(8, 1:firstDerail) - BridgeResponse.X(5, 1:firstDerail))/1.2));
-
+        PeakRotUplift(freq_index, sf_index) = rotation;
 
         derail_matrix(freq_index, sf_index) = dr_type;
     end
@@ -138,7 +139,7 @@ figure(1)
 [~, hCont] = contourf(X, Y, derail_matrix, 3, 'LineStyle',':'); shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
 xlim([0.1 2.0]), ylim([0.1 5.0])%, clim([0 0.1])
 axis square
-contourLegend(hCont, ["No Derailment", "Slide-Off", "Combined", "Overturning"], 'southeast')
+contourLegend(hCont, ["No Derailment", "Sliding", "Combined", "Overturning"], 'southeast')
 saveas(gcf, "Derail_Mode_AtGrade.pdf")
 
 
@@ -149,7 +150,7 @@ figure(2)
 [~, hCont] = contourf(X, Y, derail_matrix, 3, 'LineStyle',':'); shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
 xlim([0.1 2.0]), ylim([0.1 5.0])%, clim([0 0.1])
 axis square
-contourLegend(hCont, ["No Derailment", "Slide-Off", "Combined", "Overturning"], 'southeast')
+contourLegend(hCont, ["No Derailment", "Sliding", "Combined", "Overturning"], 'southeast')
 saveas(gcf, "Derail_Mode_OnBridge.pdf")
 
 %%
@@ -160,10 +161,9 @@ clc
 load derail_AG.mat
 [X, Y] = meshgrid(freqvals, sfvals);
 figure()
-contourf(X, Y, PeakDCarBody, 100, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 4.0]), clim([0.0 1.0]), axis square
-title('Peak Car Displacement (m)')
-colormap(parula(100))
+contourf(X, Y, PeakDWheelSet, 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
+xlim([0.1 2.0]), clim([0.0 1.0]), axis square
+title('Peak Wheel Disp. (m) - At Grade')
 colorbar
 
 
@@ -171,10 +171,9 @@ load derail_OB.mat
 LatexPlots
 figure()
 [X, Y] = meshgrid(freqvals, sfvals);
-contourf(X, Y, PeakDCarBody, 100, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 4.0]), clim([0.0 1.0]), axis square
-title('Peak Car Displacement (m)')
-colormap(parula(100))
+contourf(X, Y, PeakDWheelSet, 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
+xlim([0.1 2.0]), clim([0.0 1.0]), axis square
+title('Peak Wheel Disp. (m) - On Bridge')
 colorbar
 
 %%
@@ -182,10 +181,10 @@ colorbar
 load derail_AG.mat
 [X, Y] = meshgrid(freqvals, sfvals);
 figure()
-contourf(X, Y, PeakDWheelSet, 100, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 4.0]), clim([0.0 0.5]), axis square
-title('Peak Wheel Displacement (m) - At Grade')
-colormap(parula(100))
+contourf(X, Y, 90 * PeakRWheelSet / (0.7 * pi/2), 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
+xlim([0.1 2.0]), clim([0.0 90.0]), axis square
+title('Peak Wheelset Rotation (deg)')
+colormap("parula")
 colorbar
 
 
@@ -193,10 +192,10 @@ load derail_OB.mat
 LatexPlots
 figure()
 [X, Y] = meshgrid(freqvals, sfvals);
-contourf(X, Y, PeakDWheelSet, 100, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 4.0]), clim([0.0 0.5]), axis square
-title('Peak Wheel Displacement (m) - Over Bridge')
-colormap(parula(100))
+contourf(X, Y, 90 * PeakRWheelSet / (0.7 * pi/2), 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
+xlim([0.1 2.0]), clim([0.0 90.0]), axis square
+colormap("parula")
+title('Peak Wheelset Rotation (deg)')
 colorbar
 
 %load(address, 'dr_type', 'BridgeResponse', 'X')
