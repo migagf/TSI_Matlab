@@ -136,7 +136,7 @@ LatexPlots
 [X, Y] = meshgrid(freqvals, sfvals);
 figure(1)
 [~, hCont] = contourf(X, Y, derail_matrix, 3, 'LineStyle',':'); shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 4.0])%, clim([0 0.1])
+xlim([0.1 2.0]), ylim([0.1 5.0])%, clim([0 0.1])
 axis square
 contourLegend(hCont, ["No Derailment", "Slide-Off", "Combined", "Overturning"], 'southeast')
 saveas(gcf, "Derail_Mode_AtGrade.pdf")
@@ -147,7 +147,7 @@ LatexPlots
 figure(2)
 [X, Y] = meshgrid(freqvals, sfvals);
 [~, hCont] = contourf(X, Y, derail_matrix, 3, 'LineStyle',':'); shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 4.0])%, clim([0 0.1])
+xlim([0.1 2.0]), ylim([0.1 5.0])%, clim([0 0.1])
 axis square
 contourLegend(hCont, ["No Derailment", "Slide-Off", "Combined", "Overturning"], 'southeast')
 saveas(gcf, "Derail_Mode_OnBridge.pdf")
