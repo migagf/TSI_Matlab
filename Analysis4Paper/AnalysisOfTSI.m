@@ -27,8 +27,8 @@ for File = 1:length(TheFiles)
 
     % Obtain max response of bridge
     PeakDBridge = max(abs(DataSet.BridgeResponse.X(1,1:end)));
-    PeakVBridge = max(abs(DataSet.BridgeResponse.Xdot(1,1:end)));
-    PeakABridge = max(abs(DataSet.BridgeResponse.Xddot(1,1:end)));
+    PeakVBridge = max(abs(DataSet.BridgeResponse.Xtdot(1,1:end)));
+    PeakABridge = max(abs(DataSet.BridgeResponse.Xddot(1,1:end) + DataSet.ugddot));
     PeakRBridge = max(abs(DataSet.BridgeResponse.X(2,1:end)));
     
 
