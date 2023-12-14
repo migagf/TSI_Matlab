@@ -39,9 +39,9 @@ phi = 0.5;
 g   = 9.81;       % m/s2
 
 
-for SP_index = 1:1       %4         % Speed
+for SP_index = 3:3       %4         % Speed
 for GM_index = 1:20                 % GM index
-for SF_index = 8:8                  % Scale Factor
+for SF_index = 1:7                  % Scale Factor
 for CF_index = 1:1                  % Coupling Factor
 for NL_index = 1:1                  % Linear/Nonlinear
 

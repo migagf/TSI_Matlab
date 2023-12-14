@@ -8,6 +8,7 @@ SummMatrix = zeros(length(TheFiles),20);
 
 
 for File = 1:length(TheFiles)
+    
     % Load DataSet
     [DataSet] = LoadData(strcat(TheFiles(File).folder,'\' ,TheFiles(File).name));
     groundmotion = str2double(TheFiles(File).name(6:7));
