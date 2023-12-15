@@ -128,7 +128,7 @@ for i = 1:20
     % Run Ground Motion and Create Spectrum
     for j = 1:length(T)
         clear u v a
-        [u,v,a] = CA_script(m,k(j),z,dt,currentRec(:,2));
+        [u,v,a] = CA_script(m, k(j), z, dt, currentRec(:,2));
 
         Sd(j) = max(abs(u));
         Sv(j) = Sd(j)*wn(j);

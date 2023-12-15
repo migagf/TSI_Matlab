@@ -63,7 +63,7 @@ tmax = 18;
 % tmax = 14;
 
 tmin = 8;
-tmax = 12;
+tmax = tmin + 7;
 
 figure()
 subplot(3,1,1), plot(tt - tmin, NadalL, 'r'), hold on

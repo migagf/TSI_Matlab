@@ -16,7 +16,7 @@ filesdir = "C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_OB";
 
 % Select the case to be plotted
 speed_case = 1;
-ground_motion = 12;
+ground_motion = 13;
 scale_case = 4;
 coupling = 2;
 nonlinear = 2;
@@ -28,3 +28,10 @@ PostProcessingGM
 
 % Ground motion 2, scale 4
 % Ground motion 6, scale 5
+
+
+
+
+
+
+
