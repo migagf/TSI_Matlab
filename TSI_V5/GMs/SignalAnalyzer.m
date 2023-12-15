@@ -113,7 +113,7 @@ Spectra.Sv = zeros(20, length(T));
 Spectra.Sa = zeros(20, length(T));
 
 
-for i = 1:nfiles
+for i = [2, 6]
     
     % Load Ground Motion
     recName = filenames(i).name;
@@ -141,10 +141,10 @@ for i = 1:nfiles
     Spectra.Sa(i, :) = Sa;
     
     figure(1) % Pseudo-acceleration spectra
-    if i ~= 20
-        loglog(T, Spectra.Sa(i, :), 'k:', 'HandleVisibility','off'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 10 0.01 10.0])
+    if i == 2
+        plot(T, Spectra.Sa(i, :), 'r-', 'HandleVisibility','off'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 4 0.01 4.0])
     else
-        loglog(T, Spectra.Sa(i, :), 'k:', 'HandleVisibility','on'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 10 0.01 10.0])
+        plot(T, Spectra.Sa(i, :), 'k-', 'HandleVisibility','on'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 4 0.01 4.0])
     end
 % %     % figure(2) % Pseudo-acceleration spectra
 % %     % loglog(T,Spectra(i).Sd), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Disp. (g)'), grid on
@@ -163,15 +163,15 @@ for i = 1:nfiles
 end
 
 %
-Sa_mean = (prod(Spectra.Sa)).^(1/20);
-figure(1)
-loglog(T, Sa_mean, 'k', 'linewidth', 1.5)
-loglog(target_Sa_2(:, 1),  target_Sa_2(:, 2), 'm', ...
-       target_Sa_5(:, 1),  target_Sa_5(:, 2), 'r',...
-       target_Sa_10(:, 1), target_Sa_10(:, 2), 'b',...
-       target_Sa_50(:, 1), target_Sa_50(:, 2), 'g',...
-       'linewidth', 1.5)
-legend('Selected Ground Motions', 'Suite Average', '2\% POE in 50 yr', '5\% POE in 50 yr', '10\% POE in 50 yr', '50\% POE in 50 yr', 'location', 'southwest')
+% Sa_mean = (prod(Spectra.Sa)).^(1/20);
+% figure(1)
+% loglog(T, Sa_mean, 'k', 'linewidth', 1.5)
+% loglog(target_Sa_2(:, 1),  target_Sa_2(:, 2), 'm', ...
+%        target_Sa_5(:, 1),  target_Sa_5(:, 2), 'r',...
+%        target_Sa_10(:, 1), target_Sa_10(:, 2), 'b',...
+%        target_Sa_50(:, 1), target_Sa_50(:, 2), 'g',...
+%        'linewidth', 1.5)
+% legend('Selected Ground Motions', 'Suite Average', '2\% POE in 50 yr', '5\% POE in 50 yr', '10\% POE in 50 yr', '50\% POE in 50 yr', 'location', 'southwest')
 
 %% Plot time history of selected ground motion
 
@@ -208,3 +208,10 @@ for i = 1:length(filenames)
     [val,ind] = max(Spectra(i).Sd); T_peak(i) = T(ind);
 end
 
+%% Instantaneous power spectra
+
+
+IP = 
+[
+    
+]

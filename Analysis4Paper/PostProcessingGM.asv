@@ -57,24 +57,18 @@ close all
 NadalL = (movmedian(YL, 100)./movmedian(QL, 100));
 NadalR = (movmedian(YR, 100)./movmedian(QR, 100));
 
-tmin = 12;
-tmax = 18;
-% tmin = 7;
-% tmax = 14;
-
-tmin = 8;
-tmax = 12;
+tmin = 2;
 
 figure()
 subplot(3,1,1), plot(tt - tmin, NadalL, 'r'), hold on
-subplot(3,1,1), plot(tt - tmin, NadalR, 'k'), xlim([0, tmax - tmin]), ylim([-3.0, 3.0]), ylabel('Nadal Coef.'), legend('L. Wheel', 'R. Wheel', 'location', 'east'), grid on
+subplot(3,1,1), plot(tt - tmin, NadalR, 'k'), xlim([0, tmax - tmin]), ylim([-1.5, 1.5]), ylabel('Nadal Coef.'), grid on
 
-subplot(3,1,2), plot(tt - tmin, -BridgeResponse.Xtdot(1,:), 'r', ...
-                     tt - tmin, -ugdot, 'b',...
-                     tt - tmin, -V(7,:), 'k'), xlim([0, tmax - tmin]), ylabel('$u$ (m)'), legend('Track', 'Ground', 'Wheelset', 'location', 'east'), ylim([-3.0 3.0]), grid on
+subplot(3,1,2), plot(tt - tmin, -BridgeResponse.Xt(1,:), 'r', ...
+                     tt - tmin, -ug, 'b',...
+                     tt - tmin, -X(7,:), 'k'), xlim([0, tmax - tmin]), ylabel('$\dot{u}$ (m/s)'), legend('Track', 'Ground', 'Wheelset', 'location', 'eastoutside'), grid on
 
 subplot(3,1,3), plot(tt - tmin, BridgeResponse.X(3,:), 'r', ...
-                     tt - tmin, -X(9,:), 'k'), xlim([0, tmax - tmin]), ylabel('$\theta$ (rad)'), legend('Track', 'Wheelset', 'location', 'east'), ylim([-0.05 0.05]), grid on
+                     tt - tmin, -X(9,:), 'k'), xlim([0, tmax - tmin]), ylabel('$u$ (m)'), legend('Train', 'S'), grid on
 
 
 % Build scalograms

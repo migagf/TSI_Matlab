@@ -16,15 +16,12 @@ filesdir = "C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_OB";
 
 % Select the case to be plotted
 speed_case = 1;
-ground_motion = 12;
-scale_case = 4;
-coupling = 2;
-nonlinear = 2;
+ground_motion = 1;
+scale_case = 1;
+coupling = 1;
+nonlinear = 1;
 
-filename = strcat('OB_', num2str(speed_case), '_', num2str(ground_motion, '%02.0f'), '_', num2str(scale_case), '_', num2str(coupling), '_', num2str(nonlinear),'.mat');
+filename = strcat('OB_', n)
 
-load(strcat(filesdir, '\', filename))
-PostProcessingGM
 
-% Ground motion 2, scale 4
-% Ground motion 6, scale 5
+
