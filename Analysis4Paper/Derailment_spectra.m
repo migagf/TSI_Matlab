@@ -181,8 +181,8 @@ colorbar
 load derail_AG.mat
 [X, Y] = meshgrid(freqvals, sfvals);
 figure()
-contourf(X, Y, 90 * PeakRWheelSet / (0.7 * pi/2), 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 2.0]), clim([0.0 90.0]), axis square
+contourf(X, Y, 90 * PeakRWheelSet / (pi/2), 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
+xlim([0.1 2.0]), clim([0.0 30.0]), axis square
 title('Peak Wheelset Rotation (deg)')
 colormap("parula")
 colorbar
@@ -192,8 +192,8 @@ load derail_OB.mat
 LatexPlots
 figure()
 [X, Y] = meshgrid(freqvals, sfvals);
-contourf(X, Y, 90 * PeakRWheelSet / (0.7 * pi/2), 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
-xlim([0.1 2.0]), clim([0.0 90.0]), axis square
+contourf(X, Y, 90 * PeakRWheelSet / (pi/2), 25, 'LineStyle','none'), shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
+xlim([0.1 2.0]), clim([0.0 30.0]), axis square
 colormap("parula")
 title('Peak Wheelset Rotation (deg)')
 colorbar

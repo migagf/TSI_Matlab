@@ -4,7 +4,7 @@ if ~exist('nfig')
     nfig = 1;
 end
 
-showplot = 0;
+showplot = 1;
 M = MassMatrix();
 K = StiffnessMatrix();
 C = DampingMatrix();

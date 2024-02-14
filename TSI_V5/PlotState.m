@@ -204,7 +204,7 @@ Mt_R =  -Ft_R1*cos(phi_cont_R1)*R_R1(2)-Ft_R2*cos(phi_cont_R2)*R_R2(2)+...
 
 if plotting == 1
     figure(1)
-    plot(LWheel_geom_Tr(:,1)+R_track(1),LWheel_geom_Tr(:,2)+R_track(2),'b',LRail_geom_Tr(:,1)+R_track(1),LRail_geom_Tr(:,2)+R_track(2),'k',RWheel_geom_Tr(:,1)+R_track(1),RWheel_geom_Tr(:,2)+R_track(2),'b',RRail_geom_Tr(:,1)+R_track(1),RRail_geom_Tr(:,2)+R_track(2),'k'), grid on, set(gca, 'YDir','reverse'), %axis([-1.5 1.5 -0.5 0.0])
+    plot(LWheel_geom_Tr(:,1)+R_track(1),LWheel_geom_Tr(:,2)+R_track(2),'b',LRail_geom_Tr(:,1)+R_track(1),LRail_geom_Tr(:,2)+R_track(2),'k',RWheel_geom_Tr(:,1)+R_track(1),RWheel_geom_Tr(:,2)+R_track(2),'b',RRail_geom_Tr(:,1)+R_track(1),RRail_geom_Tr(:,2)+R_track(2),'k'), grid on, set(gca, 'YDir','reverse') %, ylim([-0.4 -0.1])%axis([-1.5 1.5 -0.5 0.0])
     draw_rectangle([0 + U_car(1), -((3.125+30+50+15)*2.54/100 + U_car(2))], 2.54/100*126, 105*2.54/100, U_car(3),[1 0 0],1)
     draw_rectangle([0 + U_car(4), -1.0 - U_car(5)], 3, 0.5, U_car(6),[1 0 0],1)
     drawnow
