@@ -11,9 +11,9 @@ else
     imax = min(find(abs(X(7,:)-BridgeResponse.X_Track(1,:))>2*2.54/100));
 end
 
-for i = 1:10:imax
+for i = 1:5:imax
     x_track(i) = BridgeResponse.X_Track(1,i);
-    z_track(i) = BridgeResponse.X_Track(2,i)+0.01;
+    z_track(i) = BridgeResponse.X_Track(2,i)+0.00;
     phi_track(i) = -BridgeResponse.X(3,i);
 
     X_ref = X(:,i);

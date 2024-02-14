@@ -140,11 +140,11 @@ for i = 1:20
     Spectra.Sv(i, :) = Sv;
     Spectra.Sa(i, :) = Sa;
     
-    figure(1) % Pseudo-acceleration spectra
-    if i == 2
-        plot(T, Spectra.Sa(i, :), 'r-', 'HandleVisibility','off'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 4 0.01 4.0])
+    %figure(1) % Pseudo-acceleration spectra
+    if i > 1
+        loglog(T, Spectra.Sa(i, :), 'k:', 'HandleVisibility','off'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 10 0.01 10.0])
     else
-        plot(T, Spectra.Sa(i, :), 'k-', 'HandleVisibility','on'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 4 0.01 4.0])
+        loglog(T, Spectra.Sa(i, :), 'k:', 'HandleVisibility','on'), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Accel. (g)'), grid on, axis([0.01 10 0.01 10.0])
     end
 % %     % figure(2) % Pseudo-acceleration spectra
 % %     % loglog(T,Spectra(i).Sd), hold on, xlabel('Period T (sec)'), ylabel('Pseudo-Disp. (g)'), grid on
@@ -163,15 +163,14 @@ for i = 1:20
 end
 
 %
-% Sa_mean = (prod(Spectra.Sa)).^(1/20);
-% figure(1)
-% loglog(T, Sa_mean, 'k', 'linewidth', 1.5)
-% loglog(target_Sa_2(:, 1),  target_Sa_2(:, 2), 'm', ...
-%        target_Sa_5(:, 1),  target_Sa_5(:, 2), 'r',...
-%        target_Sa_10(:, 1), target_Sa_10(:, 2), 'b',...
-%        target_Sa_50(:, 1), target_Sa_50(:, 2), 'g',...
-%        'linewidth', 1.5)
-% legend('Selected Ground Motions', 'Suite Average', '2\% POE in 50 yr', '5\% POE in 50 yr', '10\% POE in 50 yr', '50\% POE in 50 yr', 'location', 'southwest')
+Sa_mean = (prod(Spectra.Sa)).^(1/20);
+figure(1)
+loglog(T, Sa_mean, 'r-.', 'linewidth', 3.0)
+loglog(target_Sa_2(:, 1),  target_Sa_2(:, 2), 'k--', 'LineWidth', 2.0)
+loglog(target_Sa_5(:, 1),  target_Sa_5(:, 2), 'k', 'LineWidth', 2.0)
+loglog(target_Sa_10(:, 1), target_Sa_10(:, 2), 'k-.','LineWidth', 1.5)
+loglog(target_Sa_50(:, 1), target_Sa_50(:, 2), 'k--', 'LineWidth', 1.0)
+legend('Selected Ground Motions', 'Suite Average', '2\% POE in 50 yr', '5\% POE in 50 yr', '10\% POE in 50 yr', '50\% POE in 50 yr', 'location', 'southwest')
 
 %% Plot time history of selected ground motion
 
