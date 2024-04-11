@@ -3,7 +3,7 @@ clear, clc, close all
 
 
 % Load each run and store global response parameters
-TheFiles = dir("C:\Users\Miguel Gomez\Documents\PhD Files\TSI_Runs\Runs_OB\*.mat");
+TheFiles = dir("C:\Users\Miguel.MIGUEL-DESK\Documents\PhD Files\TSI_Runs\Runs_OB\*.mat");
 SummMatrix = zeros(length(TheFiles), 20);
 
 
@@ -28,7 +28,7 @@ for File = 1:length(TheFiles)
 
     % Obtain max response of bridge
     PeakDBridge = max(abs(DataSet.BridgeResponse.X(1,1:end)));
-    PeakVBridge = max(abs(DataSet.BridgeResponse.Xdot(1,1:end)));
+    PeakVBridge = max(abs(DataSet.BridgeResponse.Xtdot(1,1:end)));
     PeakABridge = max(abs(DataSet.BridgeResponse.Xddot(1,1:end) + DataSet.ugddot));
     PeakRBridge = max(abs(DataSet.BridgeResponse.X(2,1:end)));
     

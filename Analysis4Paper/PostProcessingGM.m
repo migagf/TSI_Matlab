@@ -53,7 +53,7 @@ if on_bridge
 end
 
 %% Nadal Index
-close all
+% close all
 NadalL = (movmedian(YL, 100)./movmedian(QL, 100));
 NadalR = (movmedian(YR, 100)./movmedian(QR, 100));
 
