@@ -203,11 +203,14 @@ Mt_R =  -Ft_R1*cos(phi_cont_R1)*R_R1(2)-Ft_R2*cos(phi_cont_R2)*R_R2(2)+...
 % Mt_R =  -Ft_R1*cos(phi_cont_R1)*R_R1(2)+Ft_R1*sin(phi_cont_R1)*R_R1(1);
 
 if plotting == 1
-    figure(1)
-    plot(LWheel_geom_Tr(:,1)+R_track(1),LWheel_geom_Tr(:,2)+R_track(2),'b',LRail_geom_Tr(:,1)+R_track(1),LRail_geom_Tr(:,2)+R_track(2),'k',RWheel_geom_Tr(:,1)+R_track(1),RWheel_geom_Tr(:,2)+R_track(2),'b',RRail_geom_Tr(:,1)+R_track(1),RRail_geom_Tr(:,2)+R_track(2),'k'), grid on, set(gca, 'YDir','reverse') %, ylim([-0.4 -0.1])%axis([-1.5 1.5 -0.5 0.0])
-    draw_rectangle([0 + U_car(1), -((3.125+30+50+15)*2.54/100 + U_car(2))], 2.54/100*126, 105*2.54/100, U_car(3),[1 0 0],1)
-    draw_rectangle([0 + U_car(4), -1.0 - U_car(5)], 3, 0.5, U_car(6),[1 0 0],1)
+    plot(LWheel_geom_Tr(:,1) + R_track(1), LWheel_geom_Tr(:,2) + R_track(2), 'k', ...
+        LRail_geom_Tr(:,1) + R_track(1), LRail_geom_Tr(:,2) + R_track(2), 'k', ...
+        RWheel_geom_Tr(:,1) + R_track(1), RWheel_geom_Tr(:,2) + R_track(2), 'k', ...
+        RRail_geom_Tr(:,1)+R_track(1),RRail_geom_Tr(:,2)+R_track(2),'k'), grid on, set(gca, 'YDir','reverse'), axis([-2 2 -4 0]), xlabel('$X$ (m)'), ylabel('$Y$ (m)') %, ylim([-0.4 -0.1])%axis([-1.5 1.5 -0.5 0.0])
+    draw_rectangle([0 + U_car(1), -((3.125+30+50+15)*2.54/100 + U_car(2))], 2.54/100*126, 105*2.54/100, U_car(3), [253, 181, 21]/255, 1)
+    draw_rectangle([0 + U_car(4), -1.0 - U_car(5)], 3, 0.4, U_car(6),[253, 181, 21]/255, 1)
     drawnow
+    
 end
 
 Fn = [Ny_L1+Ny_R1+Ny_L2+Ny_R2; Nz_L1+Nz_R1+Nz_L2+Nz_R2 ; Mx_L1+Mx_R1+Mx_L2+Mx_R2];

@@ -1,4 +1,5 @@
 clear, clc, close all
+LatexPlots
 
 % freq = 0.3;
 % sf = 1.0;
