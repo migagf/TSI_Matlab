@@ -29,7 +29,7 @@ for i = 1:100:imax
     % frictioncoeff(cont) = F(1)/F(2);
     cont = cont + 1;
     subplot(1,2,2)
-    plot(tt(1:i-1), BridgeResponse.X_Track(1,1:i-1), 'k'), axis([0 30 -0.8 0.8]), grid on, xlabel('Time (s)'), ylabel('$u$ (m)')
+    plot(tt(1:i-1), BridgeResponse.X_Track(1,1:i-1), 'k'), axis([0 40 -0.8 0.8]), grid on, xlabel('Time (s)'), ylabel('$u$ (m)')
     hold on
     plot(tt(1:i-1), ug(1:i-1), 'r')
     plot(tt(1:i-1), X(1,1:i-1), 'b--', LineWidth=1.5)
