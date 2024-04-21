@@ -135,7 +135,7 @@ clear
 load derail_AG.mat
 LatexPlots
 [X, Y] = meshgrid(freqvals, sfvals);
-subplot(1,2,1)
+figure(1)
 [~, hCont] = contourf(X, Y, derail_matrix, 3, 'LineStyle',':'); shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
 xlim([0.1 2.0]), ylim([0.1 5.0])%, clim([0 0.1])
 axis square
@@ -145,7 +145,7 @@ saveas(gcf, "Derail_Mode_AtGrade.pdf")
 
 load derail_OB.mat
 LatexPlots
-subplot(1,2,2)
+figure(2)
 [X, Y] = meshgrid(freqvals, sfvals);
 [~, hCont] = contourf(X, Y, derail_matrix, 3, 'LineStyle',':'); shading interp, xlabel('Frequency $f_M$ (Hz)'), ylabel('Amplitude (g)'), grid on
 xlim([0.1 2.0]), ylim([0.1 5.0])%, clim([0 0.1])

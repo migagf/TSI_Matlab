@@ -9,3 +9,4 @@ filename = '\OB_1_08_2_1_1.mat';
 load(strcat(filesdir, filename))
 
 AnimateEarthquake
+
