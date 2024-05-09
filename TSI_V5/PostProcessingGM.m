@@ -14,6 +14,7 @@ tmax = max(trec);
 
 %% Plot translations and rotations
 figure()
+
 subplot(3,1,1), plot(tt,X(7,:),tt,X(4,:),tt,X(1,:),tb,BridgeResponse.X_Track(1,:))
 ylabel('Horiz. trans. (m)'), xlabel('Time (s)')
 xlim([tmin tmax]), grid on
@@ -64,14 +65,14 @@ subplot(3,1,2), plot(tt, NadalR, 'k'), xlim([tmin, tmax]), ylim([-2.0, 2.0]), yl
 subplot(3,1,3), plot(tt, BridgeResponse.Xtdot(1,:), tt, ugdot), xlim([tmin, tmax]), ylabel('Bridge Vel. (m/s)')
 
 
-% Build scalograms
+%% Build scalograms
 NadalL(isnan(NadalL)) = 0;
 NadalR(isnan(NadalR)) = 0;
 
 figure()
-cwt(BridgeResponse.Xtdot(1, :), 2000)
+cwt(BridgeResponse.Xtdot(1, :), 2000), clim([0, 1])
 figure()
-cwt(NadalR, 2000)
+cwt(ugdot, 2000), clim([0, 1])
 
 
 

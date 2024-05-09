@@ -163,6 +163,7 @@ for i = 1:20
 end
 
 %
+fontsize(16, 'points')
 Sa_mean = (prod(Spectra.Sa)).^(1/20);
 figure(1)
 loglog(T, Sa_mean, 'r-.', 'linewidth', 3.0)

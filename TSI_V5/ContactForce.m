@@ -9,7 +9,7 @@ function [F,NF_L,NF_R,vec,Ft,delta,Momt,Uplift] = ContactForce(...
 
 % CONTACTFORCE calculates the magnitude and components of the wheel/rail
 % contact forces, using the Hertz theory and the geometry of the contact.
-cr = 1.0;
+cr = 5/9;
 
 % Input Parameters:
 %   - Y_w (m): Lateral coordinate of the wheelset (in track coordinates)

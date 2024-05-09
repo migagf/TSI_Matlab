@@ -13,32 +13,32 @@ for File = 1:length(TheFiles)
     [DataSet] = LoadData(strcat(TheFiles(File).folder,'\' ,TheFiles(File).name));
     groundmotion = str2double(TheFiles(File).name(6:7));
     
-
-    RelDis_Wheel_Track = DataSet.TrainResponse.X(7,:) - DataSet.BridgeResponse.X_Track(1, :);
-    indexDerail = abs(RelDis_Wheel_Track) > 2.5 * 2.54 / 100; % Derailment cases
+    % RelDis_Wheel_Track = DataSet.TrainResponse.X(7,:) - DataSet.BridgeResponse.X_Track(1, :);
+    % indexDerail = abs(RelDis_Wheel_Track) > 2.0 * 2.54 / 100; % Derailment cases (actually, not necessarily...)
+    % 
+    % if isempty(find(indexDerail, 1))
+    %     firstDerail = length(indexDerail);
+    %     DRCase = 0;
+    % else
+    %     firstDerail = find(indexDerail, 1);
+    %     DRCase = 1;
+    % end
     
-    if isempty(find(indexDerail, 1))
-        firstDerail = length(indexDerail);
-        DRCase = 0;
-    else
-        firstDerail = find(indexDerail, 1);
-        DRCase = 1;
-    end
-
-
+    % Compute relative rotations and displacements to check for derailment
+    RelDispl = DataSet.TrainResponse
+    RelRotation = DataSet.TrainResponse
+    
     % Obtain max response of bridge
     PeakDBridge = max(abs(DataSet.BridgeResponse.X(1,1:end)));
     PeakVBridge = max(abs(DataSet.BridgeResponse.Xtdot(1,1:end)));
     PeakABridge = max(abs(DataSet.BridgeResponse.Xddot(1,1:end) + DataSet.ugddot));
     PeakRBridge = max(abs(DataSet.BridgeResponse.X(2,1:end)));
     
-    
     % Obtain max response of train
     PeakDCarBody   = max(abs(DataSet.TrainResponse.X(1,1:firstDerail)));
     PeakDWheelSet  = max(abs(DataSet.TrainResponse.X(7,1:firstDerail)));
     PeakRCarBody   = max(abs(DataSet.TrainResponse.X(3,1:firstDerail)));
     PeakRWheelSet  = max(abs(DataSet.TrainResponse.X(9,1:firstDerail)));
-    
     
     PeakRotUplift  = max(abs(DataSet.TrainResponse.X(9, 1:firstDerail) + DataSet.BridgeResponse.X(3, 1:firstDerail) + ...
         - (DataSet.BridgeResponse.X(8, 1:firstDerail) - DataSet.BridgeResponse.X(5, 1:firstDerail))/1.7442));

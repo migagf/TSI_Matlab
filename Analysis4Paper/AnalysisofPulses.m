@@ -6,9 +6,7 @@ for File = 1:length(TheFiles)
     [DataSet] = LoadData(strcat(TheFiles(File).folder,'\' ,TheFiles(File).name));
     groundmotion = str2double(TheFiles(File).name(6:7));
 
-
     DRCase = DataSet.dr_type;
-
 
     % Obtain max response of bridge
     PeakDBridge = max(abs(DataSet.BridgeResponse.X(1,1:end)));
