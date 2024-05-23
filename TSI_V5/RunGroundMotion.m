@@ -204,8 +204,8 @@ for it = 2:tsteps
     %Numerical integration of Train EOM
     A2 = M \ (F_ext - K * X2 - C * V2);
     
-    X(:,it) = X2; 
-    V(:,it) = V2; 
+    X(:,it) = X2;
+    V(:,it) = V2;
     A(:,it) = A2;
     
     % Update the state vectors
@@ -219,7 +219,6 @@ toc
 %%  Post Processing
 
 PostProcessingGM
-
 
 % hold off
 % figure(3)

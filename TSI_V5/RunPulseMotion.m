@@ -9,10 +9,8 @@ on_bridge = false;
 % Factor for LE Bridge or NL Bridge
 NL = 1.0;
 
-
 SFvals   = 0.1:0.05:5.0;
 freqvals = 0.1:0.05:5.0;
-
 
 for SF = SFvals
 for freq = freqvals
@@ -36,7 +34,6 @@ phi = 0.5;
 g   = 9.81;       % m/s2
 Vel = 0.01/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
-
 
 %% Forcing parameters
 %SF = 1.0;
@@ -171,7 +168,6 @@ for it = 2:tsteps
     % Integration of Train EOM
     X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
     V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
-
 
     % Check for derailment
     if (abs(X2(7) - BridgeResponse.X_Track(1, it - 1)) > 0.1 && abs(X2(9)) < pi/30)

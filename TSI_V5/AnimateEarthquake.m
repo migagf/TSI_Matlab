@@ -1,20 +1,95 @@
 %% Animation
 % Use 500 for EQ
 % Use 25 for pulse
+close all
+
+doPlots = false;
 
 cont = 1;
 imax = length(BridgeResponse.X_Track(1,:));
 
-if isempty(find(abs(X(7,:)-BridgeResponse.X_Track(1,:))>2*2.54/100))
-    imax = length(BridgeResponse.X_Track(1,:));
-else
-    imax = min(find(abs(X(7,:)-BridgeResponse.X_Track(1,:))>2*2.54/100));
+% Check if animation exists... otherwise delete
+if exist("animation.gif", "file")
+    delete animation.gif
 end
 
-for i = 1:100:imax
-    x_track(i) = BridgeResponse.X_Track(1,i);
-    z_track(i) = BridgeResponse.X_Track(2,i)+0.00;
-    phi_track(i) = -BridgeResponse.X(3,i);
+%% Get first derailment
+
+% Relative wheelset/track displacement
+RelDispl = 100 / 2.54 * (X(7, :) + ...
+    - BridgeResponse.X_Track(1, :)); % inches
+
+% Rotation of the track
+TrackRotation = (BridgeResponse.X(3,:) + ...
+    + (-BridgeResponse.X(8,:) + ...
+    + BridgeResponse.X(5,:)) / 1.7742);
+
+% Relative rotation track/wheelset
+RelRotation = rad2deg(abs(-X(9, :) - TrackRotation));
+
+% Total normal force
+normalForce = Left_Cont + Right_Cont;
+
+% If wanted, create plots
+if doPlots
+    figure()
+    plot(TrackRotation)
+    hold on
+    plot(-X(9,:), ':')
+
+    figure()
+    plot(RelRotation)
+
+    figure()
+    plot(X(7, :))
+    hold on
+    plot(BridgeResponse.X_Track(1, :))
+
+    figure()
+    plot(abs(RelDispl))
+end
+
+%% Check for derailment (if relative displacement at the end of the
+% analysis is large, then identify derailment).
+if or(abs(RelDispl(end)) >= 10, max(abs(RelRotation)) > 30)
+    DRCase = 1;
+else
+    DRCase = 0;
+end
+
+% Now, check for derailment type and find derailment instant
+climb_strt = find(abs(RelDispl) > 1.0, 1);     % start climbing instant
+climb_full = find(abs(RelDispl) > 3.0, 1);     % Full climbing instant
+overt_full = find(abs(RelRotation) > 30, 1); % Overturning instant
+
+if DRCase == 1
+    if ~isempty(overt_full) && abs(normalForce(overt_full)) > 0
+        disp('Overturning Derail')
+        firstDerail = overt_full;
+        drType = 3;
+
+    elseif ~isempty(climb_full) && abs(RelRotation(climb_full)) < 3.0
+        disp('Sliding Derail')
+        firstDerail = climb_full;
+        drType = 1;
+        
+    else
+        disp('Combined Derail')
+        firstDerail = max(find(normalForce(50:end)==0, 50));
+        drType = 2;
+
+    end
+else
+    disp('No derailment')
+    firstDerail = length(RelDispl);
+    drType = 0;
+end
+
+%%
+for i = 1:50:firstDerail
+    x_track = BridgeResponse.X_Track(1,i);
+    z_track = BridgeResponse.X_Track(2,i)+0.00;
+    phi_track = -BridgeResponse.X(3,i);
 
     X_ref = X(:,i);
     V_ref = V(:,i);
@@ -24,23 +99,24 @@ for i = 1:100:imax
     
     % Activate for prescribed motion
     figure(1)
-    subplot(1,2,1)
-    F = PlotState(X_ref(7:9)',V_ref(7:9)',[x_track(i),z_track(i),phi_track(i)],[0,0,0],WheelGeom_pol,RailGeom_pol,RailProps,1,Vel,delta,[],[0 0 0 0],X_ref(1:6)');
+    %subplot(1,2,1)
+    F = PlotState(X_ref(7:9)', V_ref(7:9)', [x_track, z_track, phi_track], [0,0,0], ...
+        WheelGeom_pol, RailGeom_pol, RailProps, 1, Vel, delta, [], [0 0 0 0], X_ref(1:6)');
     % frictioncoeff(cont) = F(1)/F(2);
     cont = cont + 1;
-    subplot(1,2,2)
-    plot(tt(1:i-1), BridgeResponse.X_Track(1,1:i-1), 'k'), axis([0 40 -0.8 0.8]), grid on, xlabel('Time (s)'), ylabel('$u$ (m)')
-    hold on
-    plot(tt(1:i-1), ug(1:i-1), 'r')
-    plot(tt(1:i-1), X(1,1:i-1), 'b--', LineWidth=1.5)
-    legend('Track', 'Ground', 'Car')
-    hold off
-    x0=100;
-    y0=100;
-    width=1000;
-    height=400;
-    set(gcf,'position',[x0,y0,width,height])
-    exportgraphics(gcf,'testAnimated.gif','Append',true);
+    %subplot(1,2,2)
+    %plot(tt(1:i-1), BridgeResponse.X_Track(1,1:i-1), 'k'), axis([0 40 -0.8 0.8]), grid on, xlabel('Time (s)'), ylabel('$u$ (m)')
+    %hold on
+    %plot(tt(1:i-1), ug(1:i-1), 'r')
+    %plot(tt(1:i-1), X(1,1:i-1), 'b--', LineWidth=1.5)
+    %legend('Track', 'Ground', 'Car')
+    %hold off
+    %x0=100;
+    %y0=100;
+    %width=1000;
+    %height=400;
+    %set(gcf,'position',[x0,y0,width,height])
+    %exportgraphics(gcf,'animation.gif','Append',true);
     % Activate this one for EQ analysis (coupled structure + train)
     % ContactForce(X_ref(7:9)',V_ref(7:9)',[Y_tr(i),Z_tr(i),phi_tr(i)],[Ydot_tr(i),Zdot_tr(i),phidot_tr(i)],WheelGeom_pol,RailGeom_pol,RailProps,1,Vel);  
 end
