@@ -19,7 +19,7 @@ show_dots = true;
 close all
 % [hazlvl, cf, spd, bridgemodel, drcase, gm, drtype]
 ag_cou_nl_sl = [99, 1, 99, 1, 99, 99, 99];
-ob_cou_le_sl = [99, 0, 99, 0, 99, 99, 99];
+ob_cou_le_sl = [99, 1, 99, 1, 99, 99, 99];
 
 nbins = 12;
 
@@ -27,26 +27,26 @@ nbins = 12;
 frag_01_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pga', nbins);
 fig = figure();
 subplot(1,2,1)
-plot_fragility(frag_01_data, true, 'b', 'b.')
+plot_fragility(frag_01_data, true, 'k--', 'k.')
 
 frag_02_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pga', nbins);
-plot_fragility(frag_02_data, true, 'k--', 'k.')
+plot_fragility(frag_02_data, true, 'b', 'b.')
 
 frag_03_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pba', nbins);
-plot_fragility(frag_03_data, true, 'r:', 'r.')
+plot_fragility(frag_03_data, true, 'b:', 'bo')
 legend('PGA - At Grade', 'PGA- Over Bridge', 'PBA - Over Bridge', 'Location','southeast')
 xlabel('IM'), ylabel('$P(DR | IM)$')
 
 % Fragilities using Peak Velocities
 subplot(1,2,2)
 frag_04_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pgv', nbins);
-plot_fragility(frag_04_data, true, 'b', 'b.')
+plot_fragility(frag_04_data, true, 'k', 'k.')
 
 frag_05_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pgv', nbins);
-plot_fragility(frag_05_data, true, 'k--', 'k.')
+plot_fragility(frag_05_data, true, 'b', 'b.')
 
 frag_06_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pbv', nbins);
-plot_fragility(frag_06_data, true, 'r:', 'r.')
+plot_fragility(frag_06_data, true, 'b:', 'bo')
 legend('PGV - At Grade', 'PGV - Over Bridge', 'PBV - Over Bridge', 'Location','southeast')
 xlabel('IM'), ylabel('$P(DR | IM)$')
 
