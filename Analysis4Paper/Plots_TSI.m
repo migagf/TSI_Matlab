@@ -19,7 +19,7 @@ show_dots = true;
 close all
 % [hazlvl, cf, spd, bridgemodel, drcase, gm, drtype]
 ag_cou_nl_sl = [99, 1, 99, 1, 99, 99, 99];
-ob_cou_le_sl = [99, 1, 99, 1, 99, 99, 99];
+ob_cou_le_sl = [99, 0, 99, 0, 99, 99, 99];
 
 nbins = 12;
 
@@ -27,26 +27,26 @@ nbins = 12;
 frag_01_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pga', nbins);
 fig = figure();
 subplot(1,2,1)
-plot_fragility(frag_01_data, true, 'k--', 'k.')
+plot_fragility(frag_01_data, 1, true, 'k--', 'k.')
 
 frag_02_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pga', nbins);
-plot_fragility(frag_02_data, true, 'b', 'b.')
+plot_fragility(frag_02_data, 1, true, 'r', 'r.')
 
 frag_03_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pba', nbins);
-plot_fragility(frag_03_data, true, 'b:', 'bo')
+plot_fragility(frag_03_data, 1, true, 'r:', 'ro')
 legend('PGA - At Grade', 'PGA- Over Bridge', 'PBA - Over Bridge', 'Location','southeast')
 xlabel('IM'), ylabel('$P(DR | IM)$')
 
 % Fragilities using Peak Velocities
 subplot(1,2,2)
 frag_04_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pgv', nbins);
-plot_fragility(frag_04_data, true, 'k', 'k.')
+plot_fragility(frag_04_data, 1, true, 'k', 'k.')
 
 frag_05_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pgv', nbins);
-plot_fragility(frag_05_data, true, 'b', 'b.')
+plot_fragility(frag_05_data, 1, true, 'r', 'r.')
 
 frag_06_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pbv', nbins);
-plot_fragility(frag_06_data, true, 'b:', 'bo')
+plot_fragility(frag_06_data, 1, true, 'r:', 'ro')
 legend('PGV - At Grade', 'PGV - Over Bridge', 'PBV - Over Bridge', 'Location','southeast')
 xlabel('IM'), ylabel('$P(DR | IM)$')
 
@@ -64,8 +64,8 @@ disp(frag_06_data.beta)
 
 %% Functions
 
-function [] = plot_fragility(fragility_data, show_dots, linespecs, dotspecs)
-    if nargin < 3
+function [] = plot_fragility(fragility_data, fragtype, show_dots, linespecs, dotspecs)
+    if nargin < 4
         linespecs = 'r';
         dotspecs = '.r';
     end
@@ -81,14 +81,26 @@ function [] = plot_fragility(fragility_data, show_dots, linespecs, dotspecs)
     % Vector to plot fragility
     xnew = 0:0.01:im_max;
     xmax = min([im_max, 5]);
-
-    plot(xnew, normcdf(log(xnew), log(theta), beta), linespecs, 'LineWidth', 2.0)
-    hold on
     
-    %plot(1.0, 0.5, 'k*', 'MarkerSize', 10, 'HandleVisibility', 'off')
+    if fragtype == 1 % normalized fragility
+        plot(xnew/theta, normcdf(log(xnew/theta), log(theta/theta), beta), linespecs, 'LineWidth', 2.0)
+        hold on
+        xmax = 2;
+        %plot(1.0, 0.5, 'k*', 'MarkerSize', 10, 'HandleVisibility', 'off')
+    
+        if show_dots
+            plot(IM/theta, COLL, dotspecs, 'MarkerSize', 15.0, 'HandleVisibility', 'off')
+        end
 
-    if show_dots
-        plot(IM, COLL, dotspecs, 'MarkerSize', 15.0, 'HandleVisibility', 'off')
+    else
+        plot(xnew, normcdf(log(xnew), log(theta), beta), linespecs, 'LineWidth', 2.0)
+        hold on
+        
+        %plot(1.0, 0.5, 'k*', 'MarkerSize', 10, 'HandleVisibility', 'off')
+    
+        if show_dots
+            plot(IM, COLL, dotspecs, 'MarkerSize', 15.0, 'HandleVisibility', 'off')
+        end
     end
     
     fontsize(14, 'points')
