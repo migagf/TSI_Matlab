@@ -30,8 +30,8 @@ RailProps.E1 = RailProps.E1;
 CreateWheelRailGeom
 
 %% Solution Parameters
-dtt = 2.0E-4;   % time step (sec) of train
-dtb = 2.0E-4;   % time step (sec) of bridge 
+dtt = 5.0E-4;   % time step (sec) of train
+dtb = 5.0E-4;   % time step (sec) of bridge 
 
 % Train Finite Difference Sol. Parameters
 psi = 0.5;

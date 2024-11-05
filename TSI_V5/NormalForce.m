@@ -1,4 +1,4 @@
-function [Nk,a,b] = NormalForce(ind,deltadot,RailProps,deltadotn,cr,RyWheel,RyRail)
+function [Nk, a, b] = NormalForce(ind, deltadot, RailProps, deltadotn, cr, RyWheel, RyRail)
 % NORMALFORCE Function calculates the normal force N (MN) between two objects using
 % the Hertz theory of contact.
 

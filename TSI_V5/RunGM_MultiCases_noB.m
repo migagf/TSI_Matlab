@@ -1,10 +1,10 @@
 % RUN MULTI CASES
 % Runs the time history analysis for multiple ground motions
+
 clear, clc, close all
 nfig = 0;
 showplot = 0;
 on_bridge = false;
-
 
 % Load all Ground Motions and the scale factors
 AllGMs = dir("GMs\UsedRecords\*.mat");
@@ -15,7 +15,6 @@ CF_vals = [1.0 0.0];         % Coupling Factor Cases
 SP_vals = [0.01 40 80];  % Speed of train
 SF_vals = [0.21 0.74 1.0 1.38 2.0 3.0 4.0 5.0];  % Hazard Cases
 
-
 %% Load Data
 load WheelGeom
 load RailGeom
@@ -23,10 +22,8 @@ load RailProps
 RailProps.E1 = RailProps.E1;
 RailProps.E1 = RailProps.E1;
 
-
 %% Load Train Data
 CreateWheelRailGeom
-
 
 %% Solution Parameters
 dtt = 5.0E-4;   % time step (sec) of train
