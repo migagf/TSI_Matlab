@@ -1,5 +1,5 @@
 % RUN MULTI CASES
-% Runs the time history analysis for the suite of ground motions
+% Runs the time history analysis for multiple ground motions
 
 clear, clc, close all
 nfig = 0;
@@ -7,15 +7,15 @@ nfig = 0;
 % Select showplot = 1 if want to plot the animation with the response
 showplot = 0;
 
-% true = over bridge | false = at grade
-on_bridge = true;
+% true = over bridge | false = at grade -- AG still has structure rubber pads
+on_bridge = false;
 
 % Load all Ground Motions and the scale factors
 AllGMs = dir("GMs\UsedRecords\*.mat");
 load("GMs\ScaleFactors.mat");
 
 NL_vals = [1.0 0.0];     % Linear/Nonlinear Analysis Cases [1 = nonlinear | 0 = linear]
-CF_vals = [1.0 0.0];     % Coupling factor cases [1 = coupled | 0 = decoupled]
+CF_vals = [1.0 0.0];     % Coupling Factor Cases [1 = coupled | 0 = decoupled]
 SP_vals = [0.01 40 80];  % Speed of train (kph)
 SF_vals = [0.21 0.74 1.0 1.38 2.0 3.0 4.0 5.0];  % "Hazard" Cases
 
@@ -36,18 +36,18 @@ dtb = 5.0E-4;   % time step (sec) of bridge
 % Train Finite Difference Sol. Parameters
 psi = 0.5;
 phi = 0.5;
-g   = 9.81;    % m/s2
+g = 9.81;       % m/s2
 
 for SP_index = 1:3   % Speed
     for GM_index = 1:20   % GM index
         for SF_index = 1:8   % Scale Factor
-            for CF_index = 1:2   % Coupling Factor (Run Coupled and Decoupled Analyses)
-                for NL_index = 1:2   % Linear/Nonlinear
+            for CF_index = 1:1   % Coupling Factor (Here is just one, because no coupled analysis)
+                for NL_index = 1:1   % Linear/Nonlinear
                     
-                    % (1) Create analysis code name
-                    AnalysisCode = strcat('OB_',num2str(SP_index),'_',num2str(GM_index,"%02.f"),'_',num2str(SF_index),'_',num2str(CF_index),'_',num2str(NL_index));
+                    % (1) Generate analysis code
+                    AnalysisCode = strcat('AG_',num2str(SP_index),'_',num2str(GM_index,"%02.f"),'_',num2str(SF_index),'_',num2str(CF_index),'_',num2str(NL_index));
                     
-                    % (2) Define variables for the analysis
+                    % (2) Factor for LE Bridge or NL Bridge
                     NL = NL_vals(NL_index);           % NL = 1 --> Nonlinear | NL = 0 --> Linear
                     Vel = SP_vals(SP_index)/3.6;      % m/sec (turn speed from kph to m/s)
                     CF = CF_vals(CF_index);           % Coupling factor
@@ -59,13 +59,13 @@ for SP_index = 1:3   % Speed
                     disp(AllGMs(GM_index).name)
                     disp('SP_GM_SF_CF_NL')
                     disp(AnalysisCode)
-                    disp('of_3_20_8_1_2')
+                    disp('of_3_20_8_2_2')
                     
-                    % (4) Processing of the ground motion
-                    ugddot = SF * TimeAccelData(:, 2) * 9.81;      % Accelerations (m/s^2)
-                    dtrec = round(TimeAccelData(2, 1), 3);         % Time step of record.
-                    ugddot = [0*(0:dtrec:4)'; ugddot];             % Pad 4 seconds of zeroes
-                    trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector 
+                    % (4) Proceessing of the ground motion
+                    ugddot = SF*TimeAccelData(:,2)*9.81;         % Displacement Time-History (m)
+                    dtrec = round(0.005,3);                      % Time step of record
+                    ugddot = [0*(0:dtrec:2)'; ugddot];
+                    trec  = 0:dtrec:dtrec*(length(ugddot)-1);    % Time vector 
                     
                     %ugdot  = [0 diff(urec')]/(dtrec);           % Velocity Time-History
                     %ugddot = [0 diff(ugdot)]/(dtrec);           % Acceleration Time-History
@@ -76,7 +76,7 @@ for SP_index = 1:3   % Speed
                     % Plot EQ record
                     nfig = nfig + 1;
                     
-                    % figure(nfig)
+                    % figure(nfig) 
                     % subplot(3,1,1), plot(trec,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
                     % subplot(3,1,2), plot(trec,ugdot), xlabel('Time (sec)'), ylabel('Vel. (m/s)'), title('Ground Motion (LPE)')
                     % subplot(3,1,3), plot(trec,urec), xlabel('Time (sec)'), ylabel('Dis. (m)'), title('Ground Motion (LPE)')
@@ -85,9 +85,9 @@ for SP_index = 1:3   % Speed
                     tt = 0:dtt:trec(end);  % Time vector for train analysis
                     tb = 0:dtb:trec(end);  % Time vector for bridge analysis
                     
-                    ugddot  = interp1(trec,ugddot,tb);  % Excitation is required only for bridge
-                    ugdot   = interp1(trec,ugdot,tb);   % Excitation is required only for bridge
-                    urec    = interp1(trec,urec,tb);    % Excitation is required only for bridge
+                    ugddot = interp1(trec,ugddot,tb);  % Excitation is required only for bridge
+                    ugdot = interp1(trec,ugdot,tb);   % Excitation is required only for bridge
+                    urec = interp1(trec,urec,tb);    % Excitation is required only for bridge
                     
                     ug = urec;
                     
@@ -96,13 +96,13 @@ for SP_index = 1:3   % Speed
                     
                     % (5) Initialization of the model
 
-                    % Bridge model initialization
                     InitializeBridgeModel
                     
-                    % Train initial conditions and prellocation of variables                    
-                    X = zeros(9, tsteps); % Train Global Coordinates 
-                    V = zeros(9, tsteps); % Train Velocities
-                    A = zeros(9, tsteps); % Train Accelerations
+                    % Initial conditions and prellocation of variables
+                    
+                    X = zeros(9,tsteps); % Train Global Coordinates 
+                    V = zeros(9,tsteps); % Train Velocities
+                    A = zeros(9,tsteps); % Train Accelerations
                     
                     % Deprecated
                     % load X_initial
@@ -117,17 +117,17 @@ for SP_index = 1:3   % Speed
                     V1 = [0 0 0 0 0 0 0 0 0]';  % Initial Velocities
                     A1 = [0 0 0 0 0 0 0 0 0]';  % Initial Accelerations
                     
-                    X(:, 1) = X0; X(:, 2) = X1;
-                    V(:, 1) = V0; V(:, 2) = V1;
-                    A(:, 1) = A0; A(:, 2) = A1;
+                    X(:,1) = X0; X(:,2) = X1;
+                    V(:,1) = V0; V(:,2) = V1;
+                    A(:,1) = A0; A(:,2) = A1;
                     
-                    BridgeResponse.X_Track = zeros(2, bsteps);
-                    BridgeResponse.V_Track = zeros(2, bsteps);
+                    BridgeResponse.X_Track = zeros(2,bsteps);
+                    BridgeResponse.V_Track = zeros(2,bsteps);
                     
                     % Extra output variables
                     Momt = [0 0 0 0]';
                     Creepforces = zeros(4, tsteps);
-                    delta = zeros(4, tsteps);
+                    delta       = zeros(4, tsteps);
                     deltadotn_vec = [0 0 0 0];
                     Left_Cont = zeros(1, tsteps);
                     Right_Cont =zeros(1, tsteps);
@@ -138,10 +138,11 @@ for SP_index = 1:3   % Speed
                     YL = zeros(1, tsteps);
                     YR = zeros(1, tsteps);
                     
-                    % (6) Mass, Stiffness and Damping Matrices                    
+                    % (6) Mass, Stiffness and Damping Matrices
+                   
                     [K] = StiffnessMatrix(); 
                     [C] = DampingMatrix();
-                    [M, Mc, Mt, Mw] = MassMatrix();
+                    [M,Mc,Mt,Mw] = MassMatrix();
                     
                     AddRayleighDamp = true;
                     if AddRayleighDamp
@@ -155,24 +156,24 @@ for SP_index = 1:3   % Speed
                     % showplot = false;
                     % EigenValueAnalysis;
                     
-                    % (7) Apply gravity load
+                    % (7) Apply Gravity Loading
                     F_ine = [0 Mc*g 0 0 Mt*g 0 0 Mw*g 0]'; % Inertial Forces (N)
                     
                     % (8) Solution of the EOM
                     tic
                     
                     ib = 2; tbridge = 0;
-                  
+                    
                     for it = 2:tsteps
                         
                         % Integration of Train EOM
                         X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
                         V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
                         
+                        % Update the force vector with Contact Algorithm
                         try
-                            % Update the force vector with Contact Algorithm
                             [F,NF_L,NF_R,vec,Ft,delta(:,it-1),Momt] = ...
-                            ContactForce( ...
+                                ContactForce( ...
                                 X2(7:9)', ...
                                 V2(7:9)', ...
                                 [BridgeResponse.X_Track(1, ib-1), BridgeResponse.X_Track(2, ib-1), -BridgeResponse.X(3, ib-1)], ...
@@ -192,14 +193,12 @@ for SP_index = 1:3   % Speed
                                 LWheel_geom_fine, ...
                                 RWheel_geom_fine ...
                                 );
-                            % If everything works Ok, then no derailment
                             pderail = 0;
                         catch
-                            pderail = 1;
-                            disp('Problem in the integration scheme. Derailment is likely.')
+                            pderail = 1.0;
                             break
                         end
-
+                        
                         % Force Vector to Structure
                         Cont_Force = 10 ^ 6 * [0, 0, 0, -F(1, 1), -F(2, 1), -F(1, 1) * 0.1, -F(1, 2), -F(2, 2), -F(1, 2) * 0.1]';
                     
@@ -218,7 +217,7 @@ for SP_index = 1:3   % Speed
                         end
                         
                         % Variable storage
-                        % vrel(i) = V2(7) - vx_track(i); vect(i,:) = Ft;
+                        % vrel(i) = V2(7)-vx_track(i); vect(i,:) = Ft;
                         Left_Cont(it) = 1000 * NF_L; 
                         Right_Cont(it) = 1000 * NF_R;
                     
@@ -228,7 +227,7 @@ for SP_index = 1:3   % Speed
                         YL(it) = F(1, 1);
                         YR(it) = F(1, 2);
                     
-                        % Numerical integration of Train EOM
+                        %Numerical integration of Train EOM
                         A2 = M \ (F_ext - K * X2 - C * V2);
                         
                         X(:,it) = X2; V(:,it) = V2; A(:,it) = A2;
@@ -239,15 +238,11 @@ for SP_index = 1:3   % Speed
                     
                     end
                     
-                    close all
-
                     toc
                     disp("-------")
                     
-                    save(strcat("Results\Runs_OB\", AnalysisCode))
-                    % PostProcessingGM
-                    % This is here to stop the code whenever needed
-                    % myvar = input('code is paused');
+                    save(strcat("Runs_AG\", AnalysisCode))
+                
                 end
             end
         end
@@ -256,9 +251,9 @@ end
 
 disp('All Done')
 
-%%  Post Processing
+%  Post Processing
 
-
+% PostProcessingGM
 
 % hold off
 % figure(3)
