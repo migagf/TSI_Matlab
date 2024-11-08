@@ -1,7 +1,7 @@
 %% Create data matrix for analysis
 clear, clc, close all
 
-analysis_type = 'AG';  % Here select [OB: over bridge | AG: at grade]
+analysis_type = 'OB';  % Here select [OB: over bridge | AG: at grade]
 
 % Names and information of all runs
 TheFiles = dir(strcat('C:\Users\Miguel.MIGUEL-DESK\Documents\PhD Files\TSI_Runs\Runs_', analysis_type, '\*.mat'));
