@@ -3,10 +3,10 @@ clear, clc, close all
 LatexPlots
 
 %% Load all data
-load SummTable_AG
+load SummTable_AG_New
 SummTable_AG = SummTable(SummTable.pba <= 100, :); % Filter out some hlvl
 
-load SummTable_OB
+load SummTable_OB_New
 SummTable_OB = SummTable(SummTable.pba <= 100, :);
 
 clear SummTable
@@ -22,31 +22,32 @@ ag_cou_nl_sl = [99, 1, 99, 1, 99, 99, 99];
 ob_cou_le_sl = [99, 0, 99, 0, 99, 99, 99];
 
 nbins = 12;
+fragtype = 0;
 
 % Fragilities using Peak Accelerations
 frag_01_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pga', nbins);
 fig = figure();
 subplot(1,2,1)
-plot_fragility(frag_01_data, 1, true, 'k--', 'k.')
+plot_fragility(frag_01_data, fragtype, true, 'k--', 'k.')
 
 frag_02_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pga', nbins);
-plot_fragility(frag_02_data, 1, true, 'r', 'r.')
+plot_fragility(frag_02_data, fragtype, true, 'r', 'r.')
 
 frag_03_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pba', nbins);
-plot_fragility(frag_03_data, 1, true, 'r:', 'ro')
+plot_fragility(frag_03_data, fragtype, true, 'r:', 'ro')
 legend('PGA - At Grade', 'PGA- Over Bridge', 'PBA - Over Bridge', 'Location','southeast')
 xlabel('IM'), ylabel('$P(DR | IM)$')
 
 % Fragilities using Peak Velocities
 subplot(1,2,2)
 frag_04_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pgv', nbins);
-plot_fragility(frag_04_data, 1, true, 'k', 'k.')
+plot_fragility(frag_04_data, fragtype, true, 'k', 'k.')
 
 frag_05_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pgv', nbins);
-plot_fragility(frag_05_data, 1, true, 'r', 'r.')
+plot_fragility(frag_05_data, fragtype, true, 'r', 'r.')
 
 frag_06_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pbv', nbins);
-plot_fragility(frag_06_data, 1, true, 'r:', 'ro')
+plot_fragility(frag_06_data, fragtype, true, 'r:', 'ro')
 legend('PGV - At Grade', 'PGV - Over Bridge', 'PBV - Over Bridge', 'Location','southeast')
 xlabel('IM'), ylabel('$P(DR | IM)$')
 

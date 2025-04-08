@@ -8,7 +8,7 @@ saveName = "SummTable_AG_New";
 TheFiles = dir(strcat('C:\Users\Miguel.MIGUEL-DESK\Documents\PhD Files\TSI_Runs\Runs_', analysis_type, '\*.mat'));
 
 SummMatrix = zeros(length(TheFiles), 21);
-doPlots = false;
+doPlots = true;
 mode = 'piola';
 
 %% Load each run file and extract relevant information
@@ -65,8 +65,7 @@ for File = 1:length(SummMatrix)
             if ~strcmp(mode, 'piola')
                 disp('Combined Derail')
             end
-            % Find whether there are 2000 datapoints with derailment (1
-            % second of full uplift of both wheels means derailment)
+            % Find whether there are 2000 datapoints with derailment
             firstDerail = max(find(DataSet.NormalForce(50:end)==0, 4000)) - 4000;
             drType = 2;
 
@@ -93,10 +92,8 @@ for File = 1:length(SummMatrix)
     
     % Get peak relative rotation between wheelset and track
     PeakRotUplift = max(abs(RelRotation(1:firstDerail)));    % Degrees
-
-    % Below are just for checking
-    % disp(PeakRotUplift/0.836)
-    % disp(firstDerail)
+    disp(PeakRotUplift/0.836)
+    disp(firstDerail)
 
     % Get peak response of train
     PeakAhCarBody = max(abs(DataSet.TrainResponse.A(1,1:firstDerail)));
@@ -148,7 +145,6 @@ SummTable = array2table(SummMatrix,...
     'purot', 'pcha', 'pcva', 'drdis', 'drcase', 'gm', 'drtype'});
 
 save(saveName, "SummTable")
-disp('Done! Summary matrix saved!')
 
 %% Functions
 
@@ -170,7 +166,4 @@ function [Data] = LoadData(FileName)
     Data.NormalForce = Left_Cont + Right_Cont;
 
 end
-
-
-
 
