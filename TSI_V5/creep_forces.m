@@ -22,7 +22,7 @@ switch method
         c = sqrt(a*b); % Average size of the contact patch
         if c ~= 0
             % Linear and rotational creepages
-            vy = vtan/speed;       
+            vy = vtan/speed;
             spin = omega/speed;
             
             c22 = 2.4014 + 2.3179/(b/a) - 0.02/((b/a)^2);
