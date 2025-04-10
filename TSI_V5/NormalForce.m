@@ -1,6 +1,6 @@
 function [Nk, a, b] = NormalForce(ind, deltadot, RailProps, deltadotn, cr, RyWheel, RyRail)
 % NORMALFORCE Function calculates the normal force N (MN) between two objects using
-% the Hertz theory of contact.
+% the Hertz theory of contact. This assumes spherical surfaces.
 
 %   Input Parameters:
 %   - ind (m): Indentation between the two surfaces

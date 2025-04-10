@@ -14,7 +14,7 @@ end
 G = railprops.E1/(2*(1 + railprops.v1)); % (MPa)
 
 % (3) Friction coefficient (update: make an input parameter)
-mu = 0.35;
+mu = 0.3;
 
 % (4) Method selector (Kalker or Carter equations)
 switch method
@@ -23,16 +23,16 @@ switch method
         if c ~= 0
             % Linear and rotational creepages
             vy = vtan/speed;
-            spin = omega/speed;
+            spin = 0/speed; % Omega/V , but Omega = 0, because this is planar motion.
             
             c22 = 2.4014 + 2.3179/(b/a) - 0.02/((b/a)^2);
             c23 = 0.4147 + 1.0184/(b/a) + 0.065/((b/a)^2) - 0.0013/((b/a)^3);
             
             % Tangential force
-            ft = -G*a*b*c22*vy + G*a*b*c23*c*spin;
+            ft = -G*a*b*c22*vy - G*a*b*c*c23*spin;
             
             % If we reach saturation
-            if abs(ft) > mu*fn 
+            if abs(ft) > mu*fn
                 ft = -sign(vy)*mu*fn;
             end
 

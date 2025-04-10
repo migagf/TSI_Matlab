@@ -1,4 +1,4 @@
-function [F,NF_L,NF_R,vec,Ft,delta,Momt,Uplift] = ContactForce(...
+function [F, NF_L, NF_R, vec, Ft, delta, Momt, Uplift] = ContactForce(...
     Uw,Vw, ...     % Wheelset displacements
     Utr, ...       % Track displacements
     Us,Vs,...      % Track displacements and velocities 
@@ -17,7 +17,6 @@ cr = 5/9;
 %   - phi_w (-): Rotation of the wheelset (in track coordinates)
 %   - Wheel_geom: is a matrix containing the geometry of the wheelsets.
 
-
 %% System DOF's
 % Wheelset coordinates
 Y_w = Uw(1);         % m
@@ -32,16 +31,16 @@ Z_tr = Utr(2);       % m
 phi_tr = Utr(3);     % rad  
 R_track = [Y_tr Z_tr];
 
-
 R_w = R_wg - R_track;  % Wheelset location in track coordinate system
 
 
 % Left rail (All these values are provided in track coordinate system)
-phi_Lr = -phi_tr - Us(3);                       % Rotation of the left rail
+phi_Lr = -phi_tr - Us(3);                      % Rotation of the left rail
 Z_Lr  = - 3.124 * 25.4 /1000 + Us(2) - Z_tr;    % Vertical position of the left rail (m)   
 Y_Lr  = -34.3355 * 25.4/1000 + Us(1) - Y_tr;  % Horizontal position of the left rail (m)
 
-R_Lr = [Y_Lr Z_Lr];                 % R vector, in global coordinate system
+R_Lr = [Y_Lr Z_Lr];                  % R vector, in global coordinate system
+
 
 % Right rail (All these values are provided in track coordinate system)
 phi_Rr = -phi_tr - Us(6);                    % Rotation of the left rail
@@ -49,6 +48,7 @@ Z_Rr  = -3.124*25.4/1000 + Us(5) - Z_tr;    % Vertical position of the left rail
 Y_Rr  = 34.3355*25.4/1000 + Us(4) - Y_tr;  % Horizontal position of the left rail (m)  
 
 R_Rr = [Y_Rr Z_Rr];                 % R vector, in track coordinate system
+
 
 %% Initial contact velocities
 deltadotn_L1 = deltadotn_vec(1); 
@@ -73,7 +73,8 @@ LWheel_geom_Tr = (Tmatrix(-phi_ws2track)*LWheel_geom')' + R_ws2track;
 
 
 % Calculate maximum indentation
-[delta_L1,maxDz_L1,phi_cont_L1,delta_L2,maxDz_L2,phi_cont_L2,D_LW] = FindContact(LWheel_geom_Tr,LRail_geom_Tr);
+[delta_L1, maxDz_L1, phi_cont_L1, delta_L2, maxDz_L2, phi_cont_L2, D_LW] = FindContact(LWheel_geom_Tr, LRail_geom_Tr);
+
 deltadot_L1 = delta_L1 - deltai(1);
 deltadot_L2 = delta_L2 - deltai(2);
 
@@ -84,13 +85,16 @@ deltadotn_L2 = deltadot_n(delta_L2,deltai(2),deltadot_L2,deltadotn_L2);
 
 
 % Calculate curvatures at the points of contact
-[Rx_lw_1,Rx_lr_1] = ContactCurvature(delta_L1,maxDz_L1,R_w,Rlw_ws,R_Lr,phi_w,phi_tr,WheelGeom_cur,RailGeom_cur,'l',RailProps);
-[Rx_lw_2,Rx_lr_2] = ContactCurvature(delta_L2,maxDz_L2,R_w,Rlw_ws,R_Lr,phi_w,phi_tr,WheelGeom_cur,RailGeom_cur,'l',RailProps);
+[Rx_lw_1,Rx_lr_1] = ContactCurvature( ...
+    delta_L1, maxDz_L1, R_w, Rlw_ws, R_Lr, phi_w, ...
+    phi_tr, WheelGeom_cur, RailGeom_cur, 'l', RailProps);
 
+[Rx_lw_2,Rx_lr_2] = ContactCurvature( ...
+    delta_L2, maxDz_L2, R_w, Rlw_ws, R_Lr, phi_w, ...
+    phi_tr, WheelGeom_cur, RailGeom_cur, 'l', RailProps);
 
 [Nforce_L1,a_L1,b_L1] = NormalForce(delta_L1,deltadot_L1,RailProps,deltadotn_L1,cr,Rx_lw_1,Rx_lr_1);
 [Nforce_L2,a_L2,b_L2] = NormalForce(delta_L2,deltadot_L2,RailProps,deltadotn_L2,cr,Rx_lw_2,Rx_lr_2);
-
 
 %Forces in the global coordinate system
 Ny_L1 =  Nforce_L1*sin(phi_cont_L1+phi_tr); Ny_L2 =  Nforce_L2*sin(phi_cont_L2+phi_tr);
@@ -110,7 +114,7 @@ Vn_L1 = Tmatrix(phi_cont_L1)*[Vy_L1 Vz_L1]';
 
 
 % Normal plane relative velocity
-Ft_L1 = creep_forces(a_L1,b_L1,Nforce_L1,Vn_L1(1),Vw(3)+Vs(3),Vel,RailProps); % Tangential force due to creep
+Ft_L1 = creep_forces(a_L1, b_L1, Nforce_L1, Vn_L1(1), Vw(3)+Vs(3), Vel, RailProps); % Tangential force due to creep
 
 
 % Ft_L1/Nforce_L1
@@ -237,7 +241,7 @@ NF_R = Nforce_R1 + Nforce_R2;
 delta = [delta_L1;delta_L2;delta_R1;delta_R2];
 Momt = [phi_cont_L1 phi_cont_L1 phi_cont_L1 phi_cont_L1]';
 
-Uplift = [D_LW , D_RW];
+Uplift = [D_LW ; D_RW];
 
 end
 

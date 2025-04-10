@@ -31,7 +31,7 @@ Vel = 80/3.6;   % m/sec
 CF  = 1.0;        % 1 for coupled analysis, 0 for uncoupled
 
 %% Forcing parameters
-SF = 15.0;
+SF = 1.0;
 
 %load /Users/miguelgomez/Documents/GitHub/TSI_Matlab/TSI_V5/GMs/UsedRecords/RSN169_IMPVALLH1.mat
 load("GMs/UsedRecords/RSN169_IMPVALLH1.mat")
@@ -64,10 +64,10 @@ bsteps = length(tb);
 % Plot EQ record
 nfig = nfig + 1;
 
-figure(nfig) 
-subplot(3,1,1), plot(tt,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
-subplot(3,1,2), plot(tt,ugdot), xlabel('Time (sec)'), ylabel('Vel. (m/s)'), title('Ground Motion (LPE)')
-subplot(3,1,3), plot(tt,urec), xlabel('Time (sec)'), ylabel('Dis. (m)'), title('Ground Motion (LPE)')
+%figure(nfig) 
+%subplot(3,1,1), plot(tt,ugddot/9.81), xlabel('Time (sec)'), ylabel('Accel. (g)'), title('Ground Motion (LPE)') 
+%subplot(3,1,2), plot(tt,ugdot), xlabel('Time (sec)'), ylabel('Vel. (m/s)'), title('Ground Motion (LPE)')
+%subplot(3,1,3), plot(tt,urec), xlabel('Time (sec)'), ylabel('Dis. (m)'), title('Ground Motion (LPE)')
 
 %% Load Train Data
 CreateWheelRailGeom
@@ -145,14 +145,21 @@ tic
 
 ib = 2; tbridge = 0;
 
+
 for it = 2:tsteps
     
+    if round(it/20, 1) - it/20 < 0.01
+        showplot = 1;
+    else
+        showplot = 0;
+    end
+
     % Integration of Train EOM
     X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
     V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
     
     % Update the force vector with Contact Algorithm
-    [F,NF_L,NF_R,vec,Ft,delta(:,it-1),Momt] = ContactForce(...
+    [F, NF_L, NF_R, vec, Ft, delta(:,it-1), Momt, ] = ContactForce(...
         X2(7:9)', ...
         V2(7:9)', ...
         [BridgeResponse.X_Track(1, ib-1), BridgeResponse.X_Track(2, ib-1), -BridgeResponse.X(3, ib-1)], ...

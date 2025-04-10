@@ -1,4 +1,4 @@
-function [delta_z1,maxDz1,phi_cont1,delta_z2,maxDz2,phi_cont2,d] = FindContact(WheelGeom,RailGeom)
+function [delta_z1, maxDz1, phi_cont1, delta_z2, maxDz2, phi_cont2, d] = FindContact(WheelGeom, RailGeom)
 n_points = 50;
 
 % Establish search limits
@@ -88,16 +88,17 @@ elseif length(X_contact)==4
 
 else % If there is no contact
     % Find Smallest Distance between Wheel and Rail
-    d = sqrt((X_con - X_con.').^2 + (Z_wheel - Z_rail.').^2);
-    d = d + diag(inf(length(X_con),1));
-    d = min(min(d));
+    % d = sqrt((X_con - X_con.').^2 + (Z_wheel - Z_rail.').^2);
+    % d = d + diag(inf(length(X_con),1));
+    d = abs(Z_wheel - Z_rail);
+    d = min(d);
 
     delta_z1 = 0;
-    maxDz1 = [0;0];
+    maxDz1 = [0; 0];
     phi_cont1 = 0;
 
     delta_z2 = 0;
-    maxDz2 = [0;0];
+    maxDz2 = [0; 0];
     phi_cont2 = 0;
 end
 

@@ -64,7 +64,7 @@ for SP_index = 1:3   % Speed
                     % (4) Processing of the ground motion
                     ugddot = SF * TimeAccelData(:, 2) * 9.81;      % Accelerations (m/s^2)
                     dtrec = round(TimeAccelData(2, 1), 3);         % Time step of record.
-                    ugddot = [0*(0:dtrec:4)'; ugddot];             % Pad 4 seconds of zeroes
+                    ugddot = [0*(0:dtrec:5)'; ugddot];             % Pad 4 seconds of zeroes
                     trec  = 0:dtrec:dtrec*(length(ugddot)-1);      % Time vector 
                     
                     %ugdot  = [0 diff(urec')]/(dtrec);           % Velocity Time-History
@@ -130,8 +130,9 @@ for SP_index = 1:3   % Speed
                     delta = zeros(4, tsteps);
                     deltadotn_vec = [0 0 0 0];
                     Left_Cont = zeros(1, tsteps);
-                    Right_Cont =zeros(1, tsteps);
-                    
+                    Right_Cont = zeros(1, tsteps);
+                    uplift = zeros(2, tsteps);
+
                     % Contact forces (storage)
                     QL = zeros(1, tsteps);
                     QR = zeros(1, tsteps);
@@ -166,12 +167,12 @@ for SP_index = 1:3   % Speed
                     for it = 2:tsteps
                         
                         % Integration of Train EOM
-                        X2 = X1 + V1 * dtt + (0.5 + psi) * A1 * dtt ^ 2 - psi * A0 * dtt ^ 2;
-                        V2 = V1 + (1 + phi) * A1 * dtt - phi * A0 * dtt;
+                        X2 = X1 + V1*dtt + (0.5 + psi)*A1*dtt^2 - psi*A0*dtt^2;
+                        V2 = V1 + (1 + phi)*A1*dtt - phi*A0*dtt;
                         
                         try
                             % Update the force vector with Contact Algorithm
-                            [F,NF_L,NF_R,vec,Ft,delta(:,it-1),Momt] = ...
+                            [F, NF_L, NF_R, vec, Ft, delta(:,it-1), Momt, uplift(:, it)] = ...
                             ContactForce( ...
                                 X2(7:9)', ...
                                 V2(7:9)', ...
@@ -196,7 +197,7 @@ for SP_index = 1:3   % Speed
                             pderail = 0;
                         catch
                             pderail = 1;
-                            disp('Problem in the integration scheme. Derailment is likely.')
+                            disp('Problem in the integration scheme. Likely caused by derailment.')
                             break
                         end
 
