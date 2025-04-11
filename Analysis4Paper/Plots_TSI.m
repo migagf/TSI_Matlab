@@ -3,7 +3,7 @@ clear, clc, close all
 LatexPlots
 
 %% Load all data
-load SummTable_AG_New
+load SummTable_AG
 SummTable_AG = SummTable(SummTable.pba <= 100, :); % Filter out some hlvl
 
 load SummTable_OB_New
@@ -21,7 +21,7 @@ close all
 ag_cou_nl_sl = [99, 1, 99, 1, 99, 99, 99];
 ob_cou_le_sl = [99, 0, 99, 0, 99, 99, 99];
 
-nbins = 12;
+nbins = 11;
 fragtype = 0;
 
 % Fragilities using Peak Accelerations
@@ -49,7 +49,7 @@ plot_fragility(frag_05_data, fragtype, true, 'r', 'r.')
 frag_06_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pbv', nbins);
 plot_fragility(frag_06_data, fragtype, true, 'r:', 'ro')
 legend('PGV - At Grade', 'PGV - Over Bridge', 'PBV - Over Bridge', 'Location','southeast')
-xlabel('IM'), ylabel('$P(DR | IM)$')
+xlabel('$\mathrm{IM}$'), ylabel('$P(\mathrm{Derail} | \mathrm{IM})$')
 
 figsize = [800 200];
 figpos = [300 300];

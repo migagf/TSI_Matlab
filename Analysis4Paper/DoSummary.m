@@ -1,17 +1,20 @@
 %% Create data matrix for analysis
 clear, clc, close all
 
-analysis_type = 'AG';  % Here select [OB: over bridge | AG: at grade]
-saveName = "SummTable_AG_New";
+analysis_type = 'OB';  % Here select [OB: over bridge | AG: at grade]
+saveName = strcat('SummTable', analysis_type);
+
+sourceFolder = 'C:\Users\Miguel.MIGUEL-DESK\Documents\GitHub\TSI_Matlab\TSI_V5\Results\';
+destinationFolder = 'C:\Users\Miguel.MIGUEL-DESK\Documents\GitHub\TSI_Matlab\TSI_V5\Results\Summary';
 
 % Names and information of all runs
-TheFiles = dir(strcat('C:\Users\Miguel.MIGUEL-DESK\Documents\PhD Files\TSI_Runs\Runs_', analysis_type, '\*.mat'));
+TheFiles = dir(strcat(sourceFolder, 'Runs_', analysis_type, '\*.mat'));
 
-SummMatrix = zeros(length(TheFiles), 21);
+SummMatrix = zeros(length(TheFiles), 22);
 doPlots = false;
 mode = 'piola';
 
-%% Load each run file and extract relevant information
+% Load each run file and extract relevant information
 
 for File = 1:length(SummMatrix)
     % Load DataSet
@@ -21,32 +24,27 @@ for File = 1:length(SummMatrix)
     groundmotion = str2double(TheFiles(File).name(6:7));
     
     % Relative wheelset/track displacement
-    RelDispl = 100 / 2.54 * (DataSet.TrainResponse.X(7, :) + ...
-        - DataSet.BridgeResponse.X_Track(1, :)); % inches
+    RelDispl = 100 / 2.54 * (DataSet.TrainResponse.X(7, :) - DataSet.BridgeResponse.X_Track(1, :)); % inches
     
     % Rotation of the track
-    TrackRotation = (DataSet.BridgeResponse.X(3,:) + ...
-        + (-DataSet.BridgeResponse.X(8,:) + ...
-        + DataSet.BridgeResponse.X(5,:)) / 1.7742);
+    TrackRotation = (DataSet.BridgeResponse.X(3,:) + (-DataSet.BridgeResponse.X(8,:) + DataSet.BridgeResponse.X(5,:)) / 1.7742);
     
     % Relative rotation track/wheelset
     RelRotation = rad2deg(abs(-DataSet.TrainResponse.X(9, :) - TrackRotation));
 
-
-    % Check for derailment (if relative displacement at the end of the
-    % analysis is large, then identify derailment).
-    if or(abs(RelDispl(end)) >= 10, max(abs(RelRotation)) > 45)
+    % Check for derailment (if relative displacement at the end of the analysis is large, then that's derailment).
+    if or(max(abs(RelDispl)) >= 5.0, max(abs(RelRotation)) > 45)
         DRCase = 1;
     else
         DRCase = 0;
     end
     
     % Now, check for derailment type and find derailment instant
-    climb_strt = find(abs(RelDispl) > 1.0, 1);     % start climbing instant
+    climb_strt = find(abs(RelDispl) > 1.0, 1);     % Start climbing instant
     climb_full = find(abs(RelDispl) > 3.0, 1);     % Full climbing instant
-    overt_full = find(abs(RelRotation) > 30, 1); % Overturning instant
+    overt_full = find(abs(RelRotation) > 30, 1);   % Overturning instant
     
-    if DRCase == 1
+    if DRCase == 1 % If derailment was identified
         if ~isempty(overt_full) && abs(DataSet.NormalForce(overt_full)) > 0
             if ~strcmp(mode, 'piola')
                 disp('Overturning Derail')
@@ -106,13 +104,16 @@ for File = 1:length(SummMatrix)
     PGA = max(abs(DataSet.ugddot));
     PGV = max(abs(DataSet.ugdot));
     
+    % Get max uplift value
+    peakUplift = max([max(abs(DataSet.Uplift(1:firstDerail))), max(abs(DataSet.Uplift(2:firstDerail)))]);
+
     % Store Variables
     SummMatrix(File,:) = [...
         DataSet.HL, DataSet.CF, DataSet.Vel, DataSet.BM, PGA, PGV,...
         PeakDBridge, PeakVBridge, PeakABridge, PeakRBridge,...
         PeakDCarBody, PeakDWheelSet, PeakRCarBody, PeakRWheelSet,...
         PeakRotUplift, PeakAhCarBody, PeakAvCarBody,...
-        abs(PeakDBridge - PeakDWheelSet), DRCase, groundmotion, drType];
+        abs(PeakDBridge - PeakDWheelSet), DRCase, groundmotion, drType, peakUplift];
     
     % If wanted, create plots
     if doPlots
@@ -145,7 +146,7 @@ SummTable = array2table(SummMatrix,...
     {'hazlvl', 'cf', 'spd', 'bridgemodel', 'pga', 'pgv', ...
     'pbd', 'pbv', 'pba', 'pbrot', ... 
     'pcd', 'pwd', 'pcrot', 'pwrot', ...
-    'purot', 'pcha', 'pcva', 'drdis', 'drcase', 'gm', 'drtype'});
+    'purot', 'pcha', 'pcva', 'drdis', 'drcase', 'gm', 'drtype', 'peakUplift'});
 
 save(saveName, "SummTable")
 disp('Done! Summary matrix saved!')
@@ -155,7 +156,7 @@ disp('Done! Summary matrix saved!')
 function [Data] = LoadData(FileName)
     % This function loads analysis and extracts required data
     load(FileName, 'BridgeResponse', 'X', 'V', 'A', 'HL', 'Vel', ...
-        'ugddot', 'ugdot', 'NL', 'CF', 'Left_Cont', 'Right_Cont');
+        'ugddot', 'ugdot', 'NL', 'CF', 'Left_Cont', 'Right_Cont', 'uplift');
     
     Data.HL = HL;
     Data.ugddot = ugddot;
@@ -168,7 +169,7 @@ function [Data] = LoadData(FileName)
     Data.TrainResponse.A = A;
     Data.CF = CF;
     Data.NormalForce = Left_Cont + Right_Cont;
-
+    Data.Uplift = uplift;
 end
 
 
