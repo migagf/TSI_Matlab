@@ -3,65 +3,103 @@ clear, clc, close all
 LatexPlots
 
 %% Load all data
-load SummTable_AG
+load SummTableAG
 SummTable_AG = SummTable(SummTable.pba <= 100, :); % Filter out some hlvl
 
-load SummTable_OB_New
+load SummTableOB
 SummTable_OB = SummTable(SummTable.pba <= 100, :);
 
 clear SummTable
 
 filter = [99, 99, 99, 99, 99, 99, 99];
 SummTable_OB(create_filter(SummTable_OB, filter), :);
-show_dots = true;
+show_dots = false;
 
+save_figures_to = 'NewFigures';
+
+showplots = [true];
 %% Fragility
-close all
-% [hazlvl, cf, spd, bridgemodel, drcase, gm, drtype]
-ag_cou_nl_sl = [99, 1, 99, 1, 99, 99, 99];
-ob_cou_le_sl = [99, 0, 99, 0, 99, 99, 99];
 
-nbins = 11;
-fragtype = 0;
+if showplots(1)
 
-% Fragilities using Peak Accelerations
-frag_01_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pga', nbins);
-fig = figure();
-subplot(1,2,1)
-plot_fragility(frag_01_data, fragtype, true, 'k--', 'k.')
+    % [hazlvl, cf, spd, bridgemodel, drcase, gm, drtype]
+    ag_cou_nl_sl = [99, 1, 2, 1, 99, 99, 99];
+    ob_cou_le_sl = [99, 1, 2, 0, 99, 99, 99];
+    ob_cou_nl_sl = [99, 1, 2, 1, 99, 99, 99];
 
-frag_02_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pga', nbins);
-plot_fragility(frag_02_data, fragtype, true, 'r', 'r.')
+    nbins = 12;
+    fragtype = 0;
 
-frag_03_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pba', nbins);
-plot_fragility(frag_03_data, fragtype, true, 'r:', 'ro')
-legend('PGA - At Grade', 'PGA- Over Bridge', 'PBA - Over Bridge', 'Location','southeast')
-xlabel('IM'), ylabel('$P(DR | IM)$')
+    % Fragilities using Peak Accelerations
+    frag_01_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pga', nbins);
+    fig = figure();
+    subplot(1,2,1)
+    plot_fragility(frag_01_data, fragtype, show_dots, 'k--', 'k.')
 
-% Fragilities using Peak Velocities
-subplot(1,2,2)
-frag_04_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pgv', nbins);
-plot_fragility(frag_04_data, fragtype, true, 'k', 'k.')
+    frag_02_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pga', nbins);
+    plot_fragility(frag_02_data, fragtype, show_dots, 'r', 'r.')
 
-frag_05_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pgv', nbins);
-plot_fragility(frag_05_data, fragtype, true, 'r', 'r.')
+    frag_03_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pba', nbins);
+    plot_fragility(frag_03_data, fragtype, show_dots, 'r:', 'ro')
 
-frag_06_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pbv', nbins);
-plot_fragility(frag_06_data, fragtype, true, 'r:', 'ro')
-legend('PGV - At Grade', 'PGV - Over Bridge', 'PBV - Over Bridge', 'Location','southeast')
-xlabel('$\mathrm{IM}$'), ylabel('$P(\mathrm{Derail} | \mathrm{IM})$')
+    frag_04_data = fit_fragility(SummTable_OB, ob_cou_nl_sl, 'pga', nbins);
+    plot_fragility(frag_04_data, fragtype, show_dots, 'b', 'b.')
+    
+    frag_05_data = fit_fragility(SummTable_OB, ob_cou_nl_sl, 'pba', nbins);
+    plot_fragility(frag_05_data, fragtype, show_dots, 'b:', 'bo')
 
-figsize = [800 200];
-figpos = [300 300];
-fig.Position = [figpos(1) figpos(2) figpos(1)+figsize(1) figpos(2)+figsize(2)];
+    legend('PGA - At Grade', 'PGA- Over LE Bridge', 'PBA - Over LE Bridge', 'PGA- Over NL Bridge', 'PBA - Over NL Bridge', 'Location','southeast')
+    xlabel('IM (g)'), ylabel('$P(DR | IM)$')
 
-disp(frag_01_data.beta)
-disp(frag_02_data.beta)
-disp(frag_03_data.beta)
-disp('Something')
-disp(frag_04_data.beta)
-disp(frag_05_data.beta)
-disp(frag_06_data.beta)
+    % Fragilities using Peak Velocities
+    subplot(1,2,2)
+    frag_06_data = fit_fragility(SummTable_AG, ag_cou_nl_sl, 'pgv', nbins);
+    plot_fragility(frag_06_data, fragtype, show_dots, 'k', 'k.')
+
+    frag_07_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pgv', nbins);
+    plot_fragility(frag_07_data, fragtype, show_dots, 'r', 'r.')
+
+    frag_08_data = fit_fragility(SummTable_OB, ob_cou_le_sl, 'pbv', nbins);
+    plot_fragility(frag_08_data, fragtype, show_dots, 'r:', 'ro')
+
+    frag_09_data = fit_fragility(SummTable_OB, ob_cou_nl_sl, 'pgv', nbins);
+    plot_fragility(frag_09_data, fragtype, show_dots, 'b', 'b.')
+
+    frag_10_data = fit_fragility(SummTable_OB, ob_cou_nl_sl, 'pbv', nbins);
+    plot_fragility(frag_10_data, fragtype, show_dots, 'b:', 'bo')
+
+    legend('PGV - At Grade', 'PGV - Over LE Bridge', 'PBV - Over LE Bridge', 'PGV - Over NL Bridge', 'PBV - Over NL Bridge', 'Location','southeast')
+    xlabel('$\mathrm{IM} (m/s)$'), ylabel('$P(\mathrm{DR} | \mathrm{IM})$')
+
+    figsize = [800 200];
+    figpos = [300 300];
+    fig.Position = [figpos(1) figpos(2) figpos(1)+figsize(1) figpos(2)+figsize(2)];
+
+    disp('For PGA/PBA')
+    fprintf('at-grade, pga: %.4f\n', frag_01_data.beta);
+    fprintf('over LE bridge, pga: %.4f\n', frag_02_data.beta);
+    fprintf('over LE bridge, pba: %.4f\n', frag_03_data.beta);
+    fprintf('over NL bridge, pga: %.4f\n', frag_04_data.beta);
+    fprintf('over NL bridge, pba: %.4f\n', frag_05_data.beta);
+    
+    disp('Now for PGV/PBV')
+    fprintf('at-grade, pgv: %.4f\n', frag_06_data.beta);
+    fprintf('over LE bridge, pgv: %.4f\n', frag_07_data.beta);
+    fprintf('over LE bridge, pbv: %.4f\n', frag_08_data.beta);
+    fprintf('over NL bridge, pgv: %.4f\n', frag_09_data.beta);
+    fprintf('over NL bridge, pbv: %.4f\n', frag_10_data.beta);
+    
+    % Save the figure to the specified folder
+    save_path = fullfile(save_figures_to, 'fragility_plot.pdf'); % Construct the full path
+    set(gcf, 'PaperUnits', 'inches');
+    figPosition = get(gcf, 'Position');
+    paperSize = figPosition(3:4) / 100; % Convert figure size from pixels to inches (assuming 100 dpi)
+    set(gcf, 'PaperSize', paperSize, 'PaperPosition', [0 0 paperSize]);
+    %saveas(fig, save_path); % Save the figure as a PDF
+
+
+end
+
 
 %% Functions
 

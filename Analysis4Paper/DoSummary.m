@@ -10,6 +10,9 @@ destinationFolder = 'C:\Users\Miguel.MIGUEL-DESK\Documents\GitHub\TSI_Matlab\TSI
 % Names and information of all runs
 TheFiles = dir(strcat(sourceFolder, 'Runs_', analysis_type, '\*.mat'));
 
+% Show how many files were loaded
+disp(['Loaded ' num2str(length(TheFiles)) ' files.'])
+
 SummMatrix = zeros(length(TheFiles), 22);
 doPlots = false;
 mode = 'piola';
